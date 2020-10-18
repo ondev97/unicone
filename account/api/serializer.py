@@ -62,8 +62,8 @@ from django.contrib.auth import get_user_model
 
 class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Teacher
-        fields = ('id', 'email','is_teacher','subject')
+        model = get_user_model
+        fields = ('id', 'email')
 
 
 class CustomTokenSerializer(TokenSerializer):
