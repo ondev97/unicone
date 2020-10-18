@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'account',
     'course',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth'
 ]
 
 MIDDLEWARE = [
@@ -116,6 +118,21 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#Rest Framework Authentication
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+
+    ]
+}
+
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'account.api.serializer.CustomTokenSerializer',
+
+}
+
 
 
 # Static files (CSS, JavaScript, Images)
