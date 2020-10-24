@@ -1,11 +1,10 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from rest_framework.authtoken.models import Token
+
 
 # Custom User Model
 
@@ -66,25 +65,39 @@ class User(AbstractBaseUser):
         return True
 
 
-@receiver(post_save,sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender,instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
 
-
-
-
-class Teacher(User):
-    full_name = models.CharField(max_length=300)
-    subject = models.TextField(default="text here")
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
 
 
     def __str__(self):
-        return self.full_name
+        return self.user.username
 
 
-class Student(User):
-    full_name = models.CharField(max_length=300)
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.full_name
+        return self.user.username
+
+@receiver(post_save, sender=User)
+def createprofile(sender, instance, created, **kwargs):
+    print("///////", created)
+    if instance.is_teacher and not instance.is_superuser:
+        TeacherProfile.objects.get_or_create(user=instance)
+    elif not instance.is_superuser:
+        StudentProfile.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def saveprofile(sender, instance, **kwargs):
+    print('Saved')
+    if instance.is_teacher and not instance.is_superuser:
+        instance.teacherprofile.save()
+    elif not instance.is_superuser:
+        StudentProfile.objects.get_or_create(user=instance)
+
+
+
+

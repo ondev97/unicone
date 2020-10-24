@@ -1,69 +1,42 @@
-from rest_framework import serializers
-from account.models import Teacher,Student
-
-class TeacherRegSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(
-        style={'input_type': 'password'}, write_only=True)
-
-    class Meta:
-        model = Teacher
-        fields = ['email', 'username', 'password', 'password2','is_teacher']
-        # fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
-    def save(self):
-        account = Teacher(
-            email=self.validated_data['email'],
-            username=self.validated_data['username'],
-        )
-
-        password = self.validated_data['password']
-        password2 = self.validated_data['password2']
-
-        if password != password2:
-            raise serializers.ValidationError({"Passwords must match"})
-        account.set_password(password)
-        account.save()
-        return account
-
-
-class StudentRegSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(
-        style={'input_type': 'password'}, write_only=True)
-
-    class Meta:
-        model = Student
-        fields = ['email', 'username', 'password', 'password2']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
-    def save(self):
-        account = Student(
-            email=self.validated_data['email'],
-            username=self.validated_data['username'],
-        )
-
-        password = self.validated_data['password']
-        password2 = self.validated_data['password2']
-
-        if password != password2:
-            raise serializers.ValidationError({"Passwords must match"})
-        account.set_password(password)
-        account.save()
-        return account
-
-
 from rest_auth.serializers import TokenSerializer
+from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class UserSerializerAPI(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username','email','password','is_teacher']
+        extra_kwargs = {"password":{"write_only":True}}
+
+        # def create(self,validated_data):
+        #     username = validated_data['username']
+        #     email = validated_data['email']
+        #     password = validated_data['password']
+        #     user_obj = User(
+        #         username = username,
+        #         email = email
+        #     )
+        #     user_obj.set_password(password)
+        #     user_obj.save()
+        #     return user_obj
+        # def create(self,validated_data):
+        #     user = User.objects.create(
+        #         email = validated_data['email'],
+        #         username = validated_data['username'],
+        #         password = make_password(validated_data['password'])
+        #     )
+        #
+        #     user.save()
+        #     return user
+        #
 
 
 class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model
-        fields = ('id', 'email')
+        model = get_user_model()
+        fields = ('id', 'email','is_teacher')
 
 
 class CustomTokenSerializer(TokenSerializer):

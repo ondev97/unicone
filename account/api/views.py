@@ -1,34 +1,13 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView
+from .serializer import UserSerializerAPI
 
 
-from account.api.serializer import TeacherRegSerializer,StudentRegSerializer
+# Create your views here.
 
-@api_view(['POST'])
-def registration_view(request):
-    serializer = TeacherRegSerializer(data=request.data)
-    data = {}
-    if serializer.is_valid():
-        account = serializer.save(is_teacher=True)
-        data['response'] = "Successfully registered"
-        data['email'] = account.email
-        data['username'] = account.username
-    else:
-        data = serializer.errors
-    return Response(data)
+class createuser(CreateAPIView):
+    serializer_class = UserSerializerAPI
 
-
-@api_view(['POST'])
-def sturegistration_view(request):
-    serializer = StudentRegSerializer(data=request.data)
-    data = {}
-    if serializer.is_valid():
-        account = serializer.save()
-        data['response'] = "Successfully registered"
-        data['email'] = account.email
-        data['username'] = account.username
-    else:
-        data = serializer.errors
-    return Response(data)
-
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.set_password(instance.password)
+        instance.save()
