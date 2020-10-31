@@ -49,9 +49,3 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     def get_author(self, obj):
         return str(obj.author.user.username)
-    def create(self,validated_data):
-        modules_data = validated_data.pop('modules')
-        course = Course.objects.create(**validated_data)
-        for modules_data in modules_data:
-            Module.objects.create(course=course,**modules_data)
-        return course
