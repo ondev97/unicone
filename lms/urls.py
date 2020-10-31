@@ -22,7 +22,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('course-api/',include('course.api.urls')),
+    path('course-api/',include('course.api.urls'),name='course_api'),
     path('account-api/',include('account.api.urls')),
     path('rest-auth/',include('rest_auth.urls'))
 ]
