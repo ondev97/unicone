@@ -18,7 +18,7 @@ class Module(models.Model):
     module_content = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.module_name+ ""+"" + self.course.course_name
+        return self.module_name+ ""+" "+ self.course.course_name
 
 class Enrollment(models.Model):
     name = models.CharField(max_length=100,default="Text here")

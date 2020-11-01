@@ -1,25 +1,28 @@
-from pip._vendor.requests import Response
+from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
 from course.models import Course,Module
 from account.models import TeacherProfile
-from course.api.serializer import CourseSerializer,CreateCourseSerializer,CreateModuleSerializer,CourseDetailSerializer
-from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView,RetrieveUpdateAPIView
+from course.api.serializer import (CourseSerializer,
+                                   CourseDetailSerializer,
+                                   CourseCreateSerializer,
+                                   ModuleSerializer)
+from rest_framework.generics import( ListAPIView,
+                                     RetrieveAPIView,
+                                     CreateAPIView,
+                                     RetrieveUpdateAPIView,
+                                     ListCreateAPIView)
 from rest_framework.permissions import IsAuthenticated
 
+#List courses for unauthenticated users
 class ListCourseView(ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
 
-class CourseDetailView(RetrieveAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseDetailSerializer
-
-
+#creating courses and modules
 class CreateCourseView(CreateAPIView):
     queryset = Course.objects.all()
-    serializer_class = CreateCourseSerializer
+    serializer_class = CourseCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -27,19 +30,27 @@ class CreateCourseView(CreateAPIView):
         teacher = TeacherProfile.objects.get(user=self.request.user.id)
         serializer.save(author=teacher)
 
-class CreateModuleView(CreateAPIView):
+#updating courses and modules
+class UpdateCourse(RetrieveUpdateAPIView):
     queryset = Course.objects.all()
-    serializer_class = CreateModuleSerializer
+    serializer_class = CourseCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    # def perform_create(self, serializer):
-    #     course = Course.objects.get(id = self.request.course.pk)
-    #     print(course)
-    #     serializer.save(course=course)
 
+@api_view(['POST'])
+def AddModule(request,pk):
+    course = Course.objects.get(id=pk)
+    print(course)
+    serializer = ModuleSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(course=course)
+    return Response(serializer.data)
 
-
-
+@api_view(['GET',])
+def ModuleList(request):
+    courses = Course.objects.all()
+    serializer = CourseSerializer(courses,many=True)
+    return Response(serializer.data)
 
 
 

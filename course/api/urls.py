@@ -5,7 +5,10 @@ from .import views
 
 urlpatterns = [
     path('list/', views.ListCourseView.as_view(), name="course_list"),
-    path('list/<int:pk>/', views.CourseDetailView.as_view(), name="course_detail"),
+    path('view/<int:pk>/', views.ViewCourse, name="view_course"),
     path('create/', views.CreateCourseView.as_view(), name="create_course"),
-    path('add-module/', views.CreateModuleView.as_view(), name="add_module"),
+    path('update/<int:pk>/', views.UpdateCourse.as_view(), name="update_course"),
+    path('module/<int:pk>/', views.AddModule, name="add_module"),
+    path('modulelist/', views.ModuleList, name="modules"),
+
 ]
