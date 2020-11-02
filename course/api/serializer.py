@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course,Module
+from course.models import Course,Module,Enrollment
 from account.models import TeacherProfile
 
 
@@ -67,3 +67,10 @@ class CourseCreateSerializer(serializers.ModelSerializer):
             module.module_content = module_data.get('module_content',module.module_content)
             module.save()
         return instance
+
+# serializer for course Enrollment
+
+class CourseEnrollSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = "__all__"

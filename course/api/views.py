@@ -1,11 +1,12 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
 from course.models import Course,Module
-from account.models import TeacherProfile
+from account.models import TeacherProfile,StudentProfile
 from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
                                    CourseCreateSerializer,
-                                   ModuleSerializer)
+                                   ModuleSerializer,
+                                   CourseEnrollSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -52,6 +53,7 @@ class UpdateCourse(RetrieveUpdateAPIView):
 # creating a separate module
 
 
+@permission_classes((IsAuthenticated))
 @api_view(['POST'])
 def CreateModule(request,pk):
     course = Course.objects.get(id=pk)
@@ -59,6 +61,30 @@ def CreateModule(request,pk):
     serializer = ModuleSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(course=course)
+    return Response(serializer.data)
+
+
+# views for Students
+
+# course Enroll
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def EnrollCourse(request,pk):
+    course = Course.objects.get(id=pk)
+    print("course",course)
+    student = StudentProfile.objects.get(user=request.user)
+    print("student",student)
+    serializer = CourseEnrollSerializer(data=request.data,many=True)
+    print("loading the serializer...")
+    if serializer.is_valid():
+        print("serializer is valid")
+        serializer.save(course=course)
+        print("course saved")
+        serializer.save(student=student)
+        print("student saved")
+    else:
+        print("Serializer not valid",serializer.errors)
     return Response(serializer.data)
 
 

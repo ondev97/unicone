@@ -21,12 +21,12 @@ class Module(models.Model):
         return self.module_name+ ""+" "+ self.course.course_name
 
 class Enrollment(models.Model):
-    name = models.CharField(max_length=100,default="Text here")
-    course = models.ForeignKey(Course,models.CASCADE,null=True)
-    student = models.ForeignKey(StudentProfile,models.CASCADE,null=True)
+    enroll_key = models.CharField(max_length=100,default="Text here",null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,null=True)
+    student = models.ForeignKey(StudentProfile,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
-        return self.name
+        return self.course
 
     class Meta:
         unique_together = [['course','student']]
