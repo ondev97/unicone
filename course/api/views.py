@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
-from course.models import Course,Module
+from course.models import Course,Module,Enrollment
 from account.models import TeacherProfile,StudentProfile
 from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
@@ -72,8 +72,10 @@ def CreateModule(request,pk):
 @permission_classes([IsAuthenticated])
 def EnrollCourse(request,pk):
     course = Course.objects.get(id=pk)
+    print(course)
     student = StudentProfile.objects.get(user=request.user)
-    enroll = EnrollCourse(course=course,student=student)
+    print(student)
+    enroll = Enrollment(course=course,student=student)
     if request.method == "POST":
         serializer = CourseEnrollSerializer(enroll,data=request.data)
         if serializer.is_valid():
