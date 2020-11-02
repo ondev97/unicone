@@ -3,11 +3,19 @@ from course.models import Course,Module
 from account.models import TeacherProfile
 
 
-#List all courses for Unauthenticated users
+
+# Serializers for Unauthenticated users
+
+
+# List all courses
+
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id','course_name','course_description','course_cover']
+        fields = ['id','course_name','course_cover']
+
+
+# More info about courses
 
 
 class CourseDetailSerializer(serializers.ModelSerializer):
@@ -15,13 +23,14 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id','course_name','author','course_cover']
-        #fields = ['id', 'course_name', 'add_module', 'author']
+        fields = ['id','course_name','author','course_cover','course_description']
 
     def get_author(self, obj):
         return str(obj.author.user.username)
 
+# serializer for authenticated users
 
+# Serializer setup for Creating course and adding modules
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
@@ -30,6 +39,7 @@ class ModuleSerializer(serializers.ModelSerializer):
 
 class CourseCreateSerializer(serializers.ModelSerializer):
     modules = ModuleSerializer(many=True)
+    read_only = True
 
     class Meta:
         model = Course
@@ -41,3 +51,19 @@ class CourseCreateSerializer(serializers.ModelSerializer):
         for module_data in module_data:
             Module.objects.create(course=course, **module_data)
         return course
+
+    def update(self,instance,validated_data):
+        module_data = validated_data.pop('modules')
+        course = (instance.modules).all()
+        course = list(course)
+        print(course)
+        instance.course_name = validated_data.get('course_name',instance.course_name)
+        instance.course_description = validated_data.get('course_description',instance.course_description)
+        instance.save()
+
+        for module_data in module_data:
+            module = course.pop(0)
+            module.module_name = module_data.get('module_name',module.module_name)
+            module.module_content = module_data.get('module_content',module.module_content)
+            module.save()
+        return instance
