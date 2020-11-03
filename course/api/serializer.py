@@ -36,6 +36,11 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = Module
         fields = "__all__"
 
+# serializer for course Enrollment
+class CourseEnrollSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
 
 class CourseCreateSerializer(serializers.ModelSerializer):
     modules = ModuleSerializer(many=True)
@@ -68,9 +73,3 @@ class CourseCreateSerializer(serializers.ModelSerializer):
             module.save()
         return instance
 
-# serializer for course Enrollment
-
-class CourseEnrollSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Enrollment
-        fields = ['enroll_key','course','student']
