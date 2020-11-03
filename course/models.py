@@ -31,7 +31,21 @@ class Enrollment(models.Model):
     # class Meta:
     #     unique_together = [['course','student']]
 
+# sandeep+django=sadneepdajngo
+# coupenStr = student + ":" + course
+# coupen = encrypt(coupenStr, key="lms")
 
+#Coupen table ( student, course, coupen )
 
+    #view
+    #   str = decrypt(request.data.coupen, key="lms").split(':')
+    #   course = Course.obejects.filter(ie__exact == str[1])
+    #   if str[0] == request.user.username and  str[1] ==  pk
+    #       .......................
 
+# hf
+# enroll view
+#coursestr.split()
+#course name = enrolling course.name
+#studtn name = student.name
 
