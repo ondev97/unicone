@@ -73,4 +73,4 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 class CourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
-        fields = "__all__"
+        fields = ['enroll_key','course','student']

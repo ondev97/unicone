@@ -77,40 +77,23 @@ def EnrollCourse(request,pk):
     print(student)
     enroll = Enrollment(course=course,student=student)
     if request.method == "POST":
+        e = Enrollment.objects.get(student=enroll.student, course=enroll.course)
+        print("printing e",e)
         serializer = CourseEnrollSerializer(enroll,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-
-
-
-
-
     # course = Course.objects.get(id=pk)
-    # print("course",course)
     # student = StudentProfile.objects.get(user=request.user)
-    # print("student",student)
-    # serializer = CourseEnrollSerializer(data=request.data,many=True)
-    # print(serializer)
-    # print("loading the serializer...")
+    # print(student)
+    # serializer = CourseEnrollSerializer(data=request.data)
     # if serializer.is_valid():
-    #     instance = serializer.save(commit=False)
-    #     print(instance)
-    #     instance.name = course.course_name
-    #     instance.course = course
-    #     instance.student = student
-    #     instance.save()
-    #     print("saved")
-    #     # print("serializer is valid")
-    #     # serializer.save(course=course)
-    #     # print("course saved")
-    #     # serializer.save(student=student)
-    #     # print("student saved")
+    #     serializer.save(course=course,student=student)
     # else:
     #     print("Serializer not valid",serializer.errors)
-    # return Response(serializer.data)
-    #
+    # return Response(serializer.errors)
+
 
 # class UpdateCourse(RetrieveUpdateAPIView):
 #     queryset = Course.objects.all()
