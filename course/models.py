@@ -26,10 +26,10 @@ class Enrollment(models.Model):
     student = models.ForeignKey(StudentProfile,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
-        return self.course
+        return self.course.course_name
 
-    class Meta:
-        unique_together = [['course','student']]
+    # class Meta:
+    #     unique_together = [['course','student']]
 
 
 

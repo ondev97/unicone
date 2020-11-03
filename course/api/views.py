@@ -56,32 +56,45 @@ class UpdateCourse(RetrieveUpdateAPIView):
 @permission_classes((IsAuthenticated))
 @api_view(['POST'])
 def CreateModule(request,pk):
+    # course = Course.objects.get(id=pk)
+    # print(course)
+    # serializer = ModuleSerializer(data=request.data)
+    # if serializer.is_valid():
+    #     serializer.save(course=course)
+    # return Response(serializer.data)
     course = Course.objects.get(id=pk)
-    print(course)
-    serializer = ModuleSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(course=course)
-    return Response(serializer.data)
+    #student = StudentProfile.objects.get(user=request.user)
+    module = Module(course=course)
+    print("important", module.course)
+    if request.method == "POST":
+        serializer = ModuleSerializer(module, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
 
 # views for Students
 
 # course Enroll
 
-@api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@api_view(['POST'])
 def EnrollCourse(request,pk):
     course = Course.objects.get(id=pk)
-    print(course)
     student = StudentProfile.objects.get(user=request.user)
-    print(student)
     enroll = Enrollment(course=course,student=student)
     if request.method == "POST":
-        serializer = CourseEnrollSerializer(enroll,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        e = Enrollment.objects.filter(course=course, student=student).first()
+        if not e:
+            serializer = CourseEnrollSerializer(enroll, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors)
+        return Response("You have already enrolled this course...")
 
 
 
