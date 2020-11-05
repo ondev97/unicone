@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=100,null=True)
     last_name = models.CharField(max_length=100,null=True)
-    phone_no = models.CharField(max_length=10,null=True)
+    phone_no = models.CharField(max_length=12,null=True)
     date_joined = models.DateField(
         verbose_name='date joined', auto_now_add=True)
     last_login = models.DateField(verbose_name='last login', auto_now=True)

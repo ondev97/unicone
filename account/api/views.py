@@ -11,3 +11,4 @@ class createuser(CreateAPIView):
         instance = serializer.save()
         instance.set_password(instance.password)
         instance.save()
+
