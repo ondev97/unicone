@@ -12,7 +12,7 @@ from account.models import TeacherProfile
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id','course_name','course_cover']
+        fields = ['id','course_cover','course_description','course_name']
 
 
 # More info about courses
@@ -41,6 +41,20 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = "__all__"
+
+class CourseSerializerForEnroll(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+
+class MycoursesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
+
+
+
 
 class CourseCreateSerializer(serializers.ModelSerializer):
     modules = ModuleSerializer(many=True)
@@ -73,3 +87,9 @@ class CourseCreateSerializer(serializers.ModelSerializer):
             module.save()
         return instance
 
+class EnrolledCourseSerializer(serializers.ModelSerializer):
+    modules=ModuleSerializer(many=True)
+
+    class Meta:
+        model = Course
+        fields = ['id','course_cover','course_description','author','modules']

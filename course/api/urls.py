@@ -10,5 +10,6 @@ urlpatterns = [
     path('updatecourse/<int:pk>/',views.UpdateCourse.as_view(),name='update_course'),
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
     path('enrollcourse/<int:pk>/',views.EnrollCourse,name='enroll_course'),
-
+    path('mycourses/',views.MyCourses,name='mycourses'),
+    path('viewcourse/<int:pk>/',views.ViewEnrolledCourse.as_view(),name='view_course'),
 ]

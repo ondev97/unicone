@@ -6,7 +6,9 @@ from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
                                    CourseCreateSerializer,
                                    ModuleSerializer,
-                                   CourseEnrollSerializer)
+                                   CourseEnrollSerializer,
+                                   EnrolledCourseSerializer,
+                                   MycoursesSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -56,14 +58,7 @@ class UpdateCourse(RetrieveUpdateAPIView):
 @permission_classes((IsAuthenticated))
 @api_view(['POST'])
 def CreateModule(request,pk):
-    # course = Course.objects.get(id=pk)
-    # print(course)
-    # serializer = ModuleSerializer(data=request.data)
-    # if serializer.is_valid():
-    #     serializer.save(course=course)
-    # return Response(serializer.data)
     course = Course.objects.get(id=pk)
-    #student = StudentProfile.objects.get(user=request.user)
     module = Module(course=course)
     print("important", module.course)
     if request.method == "POST":
@@ -95,6 +90,26 @@ def EnrollCourse(request,pk):
                 return Response(serializer.data)
             return Response(serializer.errors)
         return Response("You have already enrolled this course...")
+
+
+
+# Listing Enrolled Courses
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def MyCourses(request):
+    student = StudentProfile.objects.get(user=request.user)
+    courses_enrolled = Enrollment.objects.filter(student=student)
+    serializer = MycoursesSerializer(courses_enrolled,many=True)
+    return Response(serializer.data)
+
+
+
+# accessing enrolled courses
+class ViewEnrolledCourse(RetrieveAPIView):
+    serializer_class = EnrolledCourseSerializer
+    queryset = Course.objects.all()
+    permission_classes = [IsAuthenticated]
+
 
 
 

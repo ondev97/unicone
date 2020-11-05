@@ -22,7 +22,7 @@ class Module(models.Model):
 
 class Enrollment(models.Model):
     enroll_key = models.CharField(max_length=100,default="Text here",null=True)
-    course = models.ForeignKey(Course,on_delete=models.CASCADE,null=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,null=True,related_name='enrollment')
     student = models.ForeignKey(StudentProfile,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
