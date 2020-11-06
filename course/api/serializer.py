@@ -42,16 +42,13 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
         model = Enrollment
         fields = "__all__"
 
-class CourseSerializerForEnroll(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
 
 class MycoursesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = "__all__"
+        fields = ['id','course']
+        depth = 1
 
 
 

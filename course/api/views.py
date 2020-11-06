@@ -99,14 +99,14 @@ def EnrollCourse(request,pk):
 def MyCourses(request):
     student = StudentProfile.objects.get(user=request.user)
     courses_enrolled = Enrollment.objects.filter(student=student)
-    serializer = MycoursesSerializer(courses_enrolled,many=True)
+    serializer = MycoursesSerializer(courses_enrolled,many=True,context={'request':'request'})
     return Response(serializer.data)
 
 
 
 # accessing enrolled courses
 class ViewEnrolledCourse(RetrieveAPIView):
-    serializer_class = EnrolledCourseSerializer
+    serializer_class = (EnrolledCourseSerializer)
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
 

@@ -1,6 +1,7 @@
 from rest_auth.serializers import TokenSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from ..models import TeacherProfile,StudentProfile
 
 User = get_user_model()
 
@@ -44,4 +45,10 @@ class CustomTokenSerializer(TokenSerializer):
 
     class Meta(TokenSerializer.Meta):
         fields = ('key', 'user')
+
+
+class TeacherProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = "__all__"
+        model = TeacherProfile
 

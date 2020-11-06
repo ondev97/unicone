@@ -71,8 +71,7 @@ class User(AbstractBaseUser):
 
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=100)
-
+    profile_pic = models.ImageField(upload_to="pro_pic_teacher/",null=True,blank=True)
 
     def __str__(self):
         return self.user.username
@@ -80,6 +79,7 @@ class TeacherProfile(models.Model):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to="pro_pic_student/", null=True, blank=True)
 
     def __str__(self):
         return self.user.username
