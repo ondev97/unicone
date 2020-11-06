@@ -99,7 +99,7 @@ def EnrollCourse(request,pk):
 def MyCourses(request):
     student = StudentProfile.objects.get(user=request.user)
     courses_enrolled = Enrollment.objects.filter(student=student)
-    serializer = MycoursesSerializer(courses_enrolled,many=True,context={'request':'request'})
+    serializer = MycoursesSerializer(courses_enrolled,many=True)
     return Response(serializer.data)
 
 

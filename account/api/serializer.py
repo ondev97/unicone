@@ -47,8 +47,11 @@ class CustomTokenSerializer(TokenSerializer):
         fields = ('key', 'user')
 
 
+
 class TeacherProfileSerializer(serializers.ModelSerializer):
+
     class Meta:
         fields = "__all__"
         model = TeacherProfile
+        depth = 1
 
