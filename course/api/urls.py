@@ -12,4 +12,5 @@ urlpatterns = [
     path('enrollcourse/<int:pk>/',views.EnrollCourse,name='enroll_course'),
     path('mycourses/',views.MyCourses,name='mycourses'),
     path('viewcourse/<int:pk>/',views.ViewEnrolledCourse.as_view(),name='view_course'),
+    path('stulist/',views.ViewStudentsInCourse,name='view_stulist'),
 ]

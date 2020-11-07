@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
 from course.models import Course,Module,Enrollment
 from account.models import TeacherProfile,StudentProfile
+from django.db.models import Q
 from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
                                    CourseCreateSerializer,
@@ -109,6 +110,18 @@ class ViewEnrolledCourse(RetrieveAPIView):
     serializer_class = (EnrolledCourseSerializer)
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ViewStudentsInCourse(request):
+    author = TeacherProfile(user=request.user)
+    print(author.user.id)
+    student = StudentProfile.objects.all()
+    course = Enrollment.objects.filter(course__author__user_id=author.user.id)
+    #course = Enrollment.objects.all()
+    print(course)
+    serializer = CourseEnrollSerializer(course,many=True)
+    return Response(serializer.data)
 
 
 
