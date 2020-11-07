@@ -49,3 +49,11 @@ class Enrollment(models.Model):
 #course name = enrolling course.name
 #studtn name = student.name
 
+#  Coupon(id, course, exprireDate)
+#  course = Coubrse.obje
+#  couponList = []
+#  for i in range(0, 50):
+#       serializer = CouponSerializer(course,request.data)
+#       if serializer.isValid():
+#           serializer.save()
+#           couponList.append(serializer.id)
