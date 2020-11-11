@@ -16,6 +16,7 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,related_name='modules')
     module_name = models.CharField(max_length=100)
     module_content = models.CharField(max_length=100)
+    file = models.FileField(null=True,upload_to='course_files/')
 
     def __str__(self):
         return self.module_name+ ""+" "+ self.course.course_name
