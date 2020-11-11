@@ -172,7 +172,7 @@ def CouponGenerator(request, count, pk):
 @api_view(['GET'])
 def AvailableCoupon(request, pk):
     course = Course.objects.get(id=pk)
-    couponList = Coupon.objects.filter(isIssued=False, isValid=True, course=course )
+    couponList = Coupon.objects.filter(isValid=True, course=course )
     for i in range(len(couponList)):
         coupon = str(couponList[i].id)+":"+str(couponList[i].course.id)+":"+str(couponList[i].expire_date)
         couponList[i].coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
