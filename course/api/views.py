@@ -172,7 +172,7 @@ def CouponGenerator(request, count, pk):
 @api_view(['GET'])
 def AvailableCoupon(request, pk):
     course = Course.objects.get(id=pk)
-    couponList = Coupon.objects.filter(isIssued=False, isValid=True, course=course )
+    couponList = Coupon.objects.filter(isValid=True, course=course )
     for i in range(len(couponList)):
         coupon = str(couponList[i].id)+":"+str(couponList[i].course.id)+":"+str(couponList[i].expire_date)
         couponList[i].coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
@@ -196,67 +196,4 @@ def IssueCoupon(request):
 
 
 
-
-
-# class UpdateCourse(RetrieveUpdateAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseDetailSerializer
-#     permission_classes = [IsAuthenticated]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# #List courses for unauthenticated users
-# class ListCourseView(ListAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseSerializer
-#
-#
-# #creating courses and modules
-# class CreateCourseView(CreateAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseCreateSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     def perform_create(self, serializer):
-#         print("user:-" ,self.request.user)
-#         teacher = TeacherProfile.objects.get(user=self.request.user.id)
-#         serializer.save(author=teacher)
-#
-#updating courses and modules
-# class UpdateCourse(RetrieveUpdateAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseCreateSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#
-# @api_view(['POST'])
-# def AddModule(request,pk):
-#     course = Course.objects.get(id=pk)
-#     print(course)
-#     serializer = ModuleSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save(course=course)
-#     return Response(serializer.data)
-#
-# @api_view(['GET',])
-# def ModuleList(request):
-#     courses = Course.objects.all()
-#     serializer = CourseSerializer(courses,many=True)
-#     return Response(serializer.data)
-#
-#
-#
 

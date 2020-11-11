@@ -40,32 +40,3 @@ class Coupon(models.Model):
     def __str__(self):
         return self.coupon_key+"  issued: "+ str(self.isIssued)
 
-    # class Meta:
-    #     unique_together = [['course','student']]
-
-# sandeep+django=sadneepdajngo
-# coupenStr = student + ":" + course
-# coupen = encrypt(coupenStr, key="lms")
-
-#Coupen table ( student, course, coupen )
-
-    #view
-    #   str = decrypt(request.data.coupen, key="lms").split(':')
-    #   course = Course.obejects.filter(ie__exact == str[1])
-    #   if str[0] == request.user.username and  str[1] ==  pk
-    #       .......................
-
-# hf
-# enroll view
-#coursestr.split()
-#course name = enrolling course.name
-#studtn name = student.name
-
-#  Coupon(id, course, exprireDate)
-#  course = Coubrse.obje
-#  couponList = []
-#  for i in range(0, 50):
-#       serializer = CouponSerializer(course,request.data)
-#       if serializer.isValid():
-#           serializer.save()
-#           couponList.append(serializer.id)
