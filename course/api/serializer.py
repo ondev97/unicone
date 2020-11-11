@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course,Module,Enrollment
+from course.models import Course, Module, Enrollment, Coupon
 from account.models import TeacherProfile
 
 
@@ -43,6 +43,10 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
         fields = "__all__"
         depth =2
 
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = "__all__"
 
 class MycoursesSerializer(serializers.ModelSerializer):
 

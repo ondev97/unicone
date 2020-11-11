@@ -28,6 +28,17 @@ class Enrollment(models.Model):
     def __str__(self):
         return self.course.course_name
 
+class Coupon(models.Model):
+    coupon_key = models.CharField(max_length=100, null=True)
+    isValid = models.BooleanField(default=True)
+    isIssued = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    expire_date = models.DateField(verbose_name="expire_date", null=True)
+
+
+    def __str__(self):
+        return self.coupon_key+"  issued: "+ str(self.isIssued)
+
     # class Meta:
     #     unique_together = [['course','student']]
 
