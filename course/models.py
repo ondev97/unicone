@@ -16,6 +16,7 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,related_name='modules')
     module_name = models.CharField(max_length=100)
     module_content = models.CharField(max_length=100)
+    file = models.FileField(null=True,upload_to='course_files/')
 
     def __str__(self):
         return self.module_name+ ""+" "+ self.course.course_name
@@ -28,24 +29,14 @@ class Enrollment(models.Model):
     def __str__(self):
         return self.course.course_name
 
-    # class Meta:
-    #     unique_together = [['course','student']]
+class Coupon(models.Model):
+    coupon_key = models.CharField(max_length=100, null=True)
+    isValid = models.BooleanField(default=True)
+    isIssued = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    expire_date = models.DateField(verbose_name="expire_date", null=True)
 
-# sandeep+django=sadneepdajngo
-# coupenStr = student + ":" + course
-# coupen = encrypt(coupenStr, key="lms")
 
-#Coupen table ( student, course, coupen )
-
-    #view
-    #   str = decrypt(request.data.coupen, key="lms").split(':')
-    #   course = Course.obejects.filter(ie__exact == str[1])
-    #   if str[0] == request.user.username and  str[1] ==  pk
-    #       .......................
-
-# hf
-# enroll view
-#coursestr.split()
-#course name = enrolling course.name
-#studtn name = student.name
+    def __str__(self):
+        return self.coupon_key+"  issued: "+ str(self.isIssued)
 
