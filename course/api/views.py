@@ -59,6 +59,16 @@ class UpdateCourse(RetrieveUpdateAPIView):
     serializer_class = CourseCreateSerializer
     permission_classes = [IsAuthenticated]
 
+
+# get list of courses related to the teacher
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def TeacherCourses(request):
+    teacher = TeacherProfile.objects.get(user=request.user)
+    courses = Course.objects.filter(author=teacher)
+    serializer = CourseDetailSerializer(courses,many=True)
+    return Response(serializer.data)
+
 # creating a separate module
 
 
@@ -131,17 +141,7 @@ class ViewEnrolledCourse(RetrieveAPIView):
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def ViewStudentsInCourse(request):
-    author = TeacherProfile(user=request.user)
-    print(author.user.id)
-    student = StudentProfile.objects.all()
-    course = Enrollment.objects.filter(course__author__user_id=author.user.id)
-    #course = Enrollment.objects.all()
-    print(course)
-    serializer = CourseEnrollSerializer(course,many=True)
-    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def CouponGenerator(request, count, pk):
