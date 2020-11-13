@@ -14,6 +14,7 @@ urlpatterns = [
     path('availablecoupon/<int:pk>/',views.AvailableCoupon,name='available_coupon'),
     path('issuecoupon/',views.IssueCoupon,name='issue_coupon'),
     path('mycourses/',views.MyCourses,name='mycourses'),
+    path('mycoursesteacher/',views.TeacherCourses,name='mycoursesteacher'),
     path('viewcourse/<int:pk>/',views.ViewEnrolledCourse.as_view(),name='view_course'),
-    path('stulist/',views.ViewStudentsInCourse,name='view_stulist'),
+
 ]

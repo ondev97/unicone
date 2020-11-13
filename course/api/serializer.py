@@ -64,7 +64,7 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['course_name','id','course_description','modules']
+        fields = ['course_name','id','course_description','created_at','modules']
 
     def create(self, validated_data):
         module_data = validated_data.pop('modules')
