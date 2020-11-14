@@ -60,6 +60,16 @@ class UpdateCourse(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
 
+# delete course
+
+@permission_classes([IsAuthenticated])
+@api_view(['DELETE'])
+def DeleteCourse(request,pk):
+    course=Course.objects.get(id=pk)
+    course.delete()
+    return Response("Course Successfully Deleted")
+
+
 # get list of courses related to the teacher
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -86,6 +96,27 @@ def CreateModule(request,pk):
             print(serializer.data)
             return Response(serializer.data)
         return Response(serializer.errors)
+
+# update Module
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def UpdateModule(request,pk):
+    module=Module.objects.get(id=pk)
+    serializer = ModuleSerializer(instance=module,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+# Delete Module
+
+@permission_classes([IsAuthenticated])
+@api_view(['DELETE'])
+def DeleteModule(request,pk):
+    module=Module.objects.get(id=pk)
+    module.delete()
+    return Response("Module Successfully Deleted")
 
 
 # views for Students

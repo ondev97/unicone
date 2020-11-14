@@ -1,3 +1,4 @@
+
 from rest_framework.generics import CreateAPIView
 from .serializer import UserSerializerAPI, TeacherProfileSerializer
 from rest_framework.decorators import api_view,permission_classes
