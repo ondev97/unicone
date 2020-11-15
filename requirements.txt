@@ -8,11 +8,8 @@ django-rest-auth==0.9.5
 djangorestframework==3.12.1
 paramiko==2.7.2
 Pillow==8.0.0
-<<<<<<< HEAD
-=======
 pycparser==2.20
 PyNaCl==1.4.0
->>>>>>> ad6d5f28082237ef1433d0393d306645a0ff0004
 pytz==2020.1
 six==1.15.0
 sqlparse==0.4.1
