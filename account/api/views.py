@@ -1,3 +1,4 @@
+
 from rest_framework.generics import CreateAPIView
 from .serializer import UserSerializerAPI, TeacherProfileSerializer
 from rest_framework.decorators import api_view,permission_classes
@@ -16,9 +17,24 @@ class createuser(CreateAPIView):
         instance.set_password(instance.password)
         instance.save()
 
+# Retrieve User profile of Teacher
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def TeacherProfileView(request,pk):
     teacher = TeacherProfile.objects.get(user_id=pk)
     serializer = TeacherProfileSerializer(teacher)
+    serializer.data['user'].pop('password')
+    return Response(serializer.data)
+
+# Update User profile of Teacher
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def UpdateTeacherProfileView(request,pk):
+    teacher = TeacherProfile.objects.get(user_id=pk)
+    serializer = TeacherProfileSerializer(instance=teacher,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        serializer.data['user'].pop('password')
+        #print(serializer.data)
     return Response(serializer.data)

@@ -59,6 +59,26 @@ class UpdateCourse(RetrieveUpdateAPIView):
     serializer_class = CourseCreateSerializer
     permission_classes = [IsAuthenticated]
 
+
+# delete course
+
+@permission_classes([IsAuthenticated])
+@api_view(['DELETE'])
+def DeleteCourse(request,pk):
+    course=Course.objects.get(id=pk)
+    course.delete()
+    return Response("Course Successfully Deleted")
+
+
+# get list of courses related to the teacher
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def TeacherCourses(request):
+    teacher = TeacherProfile.objects.get(user=request.user)
+    courses = Course.objects.filter(author=teacher)
+    serializer = CourseDetailSerializer(courses,many=True)
+    return Response(serializer.data)
+
 # creating a separate module
 
 
@@ -77,6 +97,27 @@ def CreateModule(request,pk):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+# update Module
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def UpdateModule(request,pk):
+    module=Module.objects.get(id=pk)
+    serializer = ModuleSerializer(instance=module,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+# Delete Module
+
+@permission_classes([IsAuthenticated])
+@api_view(['DELETE'])
+def DeleteModule(request,pk):
+    module=Module.objects.get(id=pk)
+    module.delete()
+    return Response({"message":"Module Successfully Deleted"})
+
 
 # views for Students
 
@@ -93,7 +134,6 @@ def EnrollCourse(request,pk):
         couponHash = hashlib.shake_256(coupon.encode()).hexdigest(5)
         if str(request.data['coupon_key'])==str(couponHash):
             enroll = Enrollment(course=course,student=student, enroll_key=request.data['coupon_key'])
-            enroll.student.user.password = ""
             condition = c.isValid==True and c.isIssued==True
             if request.method == "POST":
                 if condition:
@@ -105,6 +145,7 @@ def EnrollCourse(request,pk):
                             couponSerializer = CouponSerializer(instance=c, data=request.data)
                             if couponSerializer.is_valid():
                                 couponSerializer.save(isValid=False)
+                                serializer.data['student']['user'].pop('password')
                             return Response(serializer.data)
                         return Response(serializer.errors)
                     return Response("You have already enrolled this course...")
@@ -131,17 +172,7 @@ class ViewEnrolledCourse(RetrieveAPIView):
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated]
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def ViewStudentsInCourse(request):
-    author = TeacherProfile(user=request.user)
-    print(author.user.id)
-    student = StudentProfile.objects.all()
-    course = Enrollment.objects.filter(course__author__user_id=author.user.id)
-    #course = Enrollment.objects.all()
-    print(course)
-    serializer = CourseEnrollSerializer(course,many=True)
-    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def CouponGenerator(request, count, pk):
@@ -162,11 +193,11 @@ def CouponGenerator(request, count, pk):
                 coupon = str(c.id) + ":" + str(c.course.id) + ":" + str(c.expire_date)
                 coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
                 serializer.save(coupon_key=coupon_key)
-        return Response("successfully created")
+        return Response({"message":"successfully created"})
     except Error:
-        return  Response("Unable to create the bulk of coupons")
+        return  Response({"message":"Unable to create the bulk of coupons"})
     else:
-        return Response("I dont know what happened")
+        return Response({"message":"Something went wrong"})
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
@@ -190,7 +221,7 @@ def IssueCoupon(request):
         serializer = CouponSerializer(instance=coupon,data=request.data)
         if serializer.is_valid():
             serializer.save(isIssued=True)
-    return Response("sucessfully issued")
+    return Response({"message":"successfully issued"})
 
 
 
