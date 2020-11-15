@@ -72,6 +72,14 @@ class User(AbstractBaseUser):
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to="pro_pic_teacher/",null=True,blank=True)
+    description = models.CharField(max_length=250,null=True)
+    education1 = models.CharField(max_length=255,null=True)
+    education2 = models.CharField(max_length=255,null=True)
+    education3 = models.CharField(max_length=255,null=True)
+    experience1 = models.CharField(max_length=255,null=True)
+    experience2 = models.CharField(max_length=255,null=True)
+    experience3 = models.CharField(max_length=255,null=True)
+
 
     def __str__(self):
         return self.user.username
