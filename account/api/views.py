@@ -23,11 +23,12 @@ class createuser(CreateAPIView):
 class LogoutView(APIView):
     @staticmethod
     def delete(request, *args, **kwargs):
-        auth.logout(request)
+        request.user.auth_token.delete()
         data = {
             "message": "You have successfully logged out.",
         }
         return Response(data)
+
 
 # Retrieve User profile of Teacher
 @permission_classes([IsAuthenticated])
