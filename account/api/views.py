@@ -1,5 +1,7 @@
-
+from django.contrib import auth
 from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
+
 from .serializer import UserSerializerAPI, TeacherProfileSerializer
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +18,16 @@ class createuser(CreateAPIView):
         instance = serializer.save()
         instance.set_password(instance.password)
         instance.save()
+
+# Logout View
+class LogoutView(APIView):
+    @staticmethod
+    def delete(request, *args, **kwargs):
+        auth.logout(request)
+        data = {
+            "message": "You have successfully logged out.",
+        }
+        return Response(data)
 
 # Retrieve User profile of Teacher
 @permission_classes([IsAuthenticated])
