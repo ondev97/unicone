@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course, Module, Enrollment, Coupon
+from course.models import Course, Module, Enrollment, Coupon, Subject
 from account.models import TeacherProfile
 
 
@@ -62,7 +62,8 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['course_name','id','course_description','created_at']
+        fields = ['course_name','id','course_description','created_at','subject']
+        depth = 3
 
     # def create(self, validated_data):
     #     module_data = validated_data.pop('modules')
@@ -93,3 +94,8 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id','course_cover','course_description','author','modules']
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'
