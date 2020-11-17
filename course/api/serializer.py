@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course, Module, Enrollment, Coupon
+from course.models import Course, Module, Enrollment, Coupon, Subject
 from account.models import TeacherProfile
 
 
@@ -59,35 +59,34 @@ class MycoursesSerializer(serializers.ModelSerializer):
 
 
 class CourseCreateSerializer(serializers.ModelSerializer):
-    modules = ModuleSerializer(many=True)
-    read_only = True
 
     class Meta:
         model = Course
-        fields = ['course_name','id','course_description','created_at','modules']
+        fields = ['course_name','id','course_description','created_at','subject']
+        depth = 3
 
-    def create(self, validated_data):
-        module_data = validated_data.pop('modules')
-        course = Course.objects.create(**validated_data)
-        for module_data in module_data:
-            Module.objects.create(course=course, **module_data)
-        return course
-
-    def update(self,instance,validated_data):
-        module_data = validated_data.pop('modules')
-        course = (instance.modules).all()
-        course = list(course)
-        print(course)
-        instance.course_name = validated_data.get('course_name',instance.course_name)
-        instance.course_description = validated_data.get('course_description',instance.course_description)
-        instance.save()
-
-        for module_data in module_data:
-            module = course.pop(0)
-            module.module_name = module_data.get('module_name',module.module_name)
-            module.module_content = module_data.get('module_content',module.module_content)
-            module.save()
-        return instance
+    # def create(self, validated_data):
+    #     module_data = validated_data.pop('modules')
+    #     course = Course.objects.create(**validated_data)
+    #     for module_data in module_data:
+    #         Module.objects.create(course=course, **module_data)
+    #     return course
+    #
+    # def update(self,instance,validated_data):
+    #     module_data = validated_data.pop('modules')
+    #     course = (instance.modules).all()
+    #     course = list(course)
+    #     print(course)
+    #     instance.course_name = validated_data.get('course_name',instance.course_name)
+    #     instance.course_description = validated_data.get('course_description',instance.course_description)
+    #     instance.save()
+    #
+    #     for module_data in module_data:
+    #         module = course.pop(0)
+    #         module.module_name = module_data.get('module_name',module.module_name)
+    #         module.module_content = module_data.get('module_content',module.module_content)
+    #         module.save()
+    #     return instance
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
     modules=ModuleSerializer(many=True)
@@ -95,3 +94,8 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id','course_cover','course_description','author','modules']
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'

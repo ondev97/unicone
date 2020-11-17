@@ -51,6 +51,8 @@ REST_FRAMEWORK={
         'rest_framework.authentication.SessionAuthentication'
     )
 }
+OLD_PASSWORD_FIELD_ENABLED = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
