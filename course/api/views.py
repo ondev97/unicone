@@ -5,7 +5,7 @@ from aifc import Error
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,permission_classes
-from course.models import Course, Module, Enrollment, Coupon
+from course.models import Course, Module, Enrollment, Coupon,Subject
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
 from course.api.serializer import (CourseSerializer,
@@ -15,7 +15,8 @@ from course.api.serializer import (CourseSerializer,
                                    CourseEnrollSerializer,
                                    EnrolledCourseSerializer,
                                    MycoursesSerializer,
-                                   CouponSerializer)
+                                   CouponSerializer,
+                                   SubjectSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -42,16 +43,28 @@ class CourseRetrieve(RetrieveAPIView):
 # views for authenticated users
 
 # creating courses and modules
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def CreateCourse(request,pk):
+    teacher = TeacherProfile.objects.get(user=request.user)
+    subject = Subject.objects.get(id=pk)
+    course = Course(author=teacher,subject=subject)
+    serializer = CourseCreateSerializer(course,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors)
 
-class CreateCourseView(CreateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseCreateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        print("user:-" ,self.request.user)
-        teacher = TeacherProfile.objects.get(user=self.request.user.id)
-        serializer.save(author=teacher)
+# class CreateCourseView(CreateAPIView):
+#     queryset = Course.objects.all()
+#     serializer_class = CourseCreateSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     def perform_create(self, serializer):
+#         print("user:-" ,self.request.user)
+#         teacher = TeacherProfile.objects.get(user=self.request.user.id)
+#         subject = Subject.objects.get(id)
+#         serializer.save(author=teacher)
 
 # updating courses and modules within the course
 class UpdateCourse(RetrieveUpdateAPIView):
@@ -223,6 +236,53 @@ def IssueCoupon(request):
             serializer.save(isIssued=True)
     return Response({"message":"successfully issued"})
 
+# create subject
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def CreateSubject(request):
+    author = TeacherProfile.objects.get(user=request.user)
+    serializer = SubjectSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(author=author)
+    return Response(serializer.data)
+
+# update subject
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def UpdateSubject(request,pk):
+    subject = Subject.objects.get(id=pk)
+    serializer = SubjectSerializer(instance=subject, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        print("updated")
+    return Response(serializer.data)
+
+# delete subject
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def DeleteSubject(request,pk):
+    subject = Subject.objects.get(id=pk)
+    subject.delete()
+    return Response("Subject Successfully Deleted")
+
+# subject list
+@api_view(['GET'])
+def SubjectList(request):
+    subjects = Subject.objects.all()
+    serializer = SubjectSerializer(subjects, many=True)
+    return Response(serializer.data)
+
+# subject list of teacher
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def TeacherSubject(request):
+    teacher = TeacherProfile.objects.get(user=request.user)
+    subject = Subject.objects.filter(author=teacher)
+    serializer = SubjectSerializer(subject,many=True)
+    return Response(serializer.data)
 
 
 

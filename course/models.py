@@ -3,10 +3,27 @@ from account.models import TeacherProfile,StudentProfile
 from datetime import date
 
 
+class Subject(models.Model):
+    def upload_location(instance, filename):
+        return "subject_images/%s/%s" % (instance.subject_name, filename)
+
+    subject_name = models.CharField(max_length=200, null=True)
+    subject_cover = models.ImageField(null=True, blank=True, upload_to=upload_location)
+    duration = models.CharField(max_length=20, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    author = models.ForeignKey(TeacherProfile,on_delete=models.CASCADE,null=True,default=None)
+
+    def __str__(self):
+        return self.subject_name
+
+
+
+
 class Course(models.Model):
     def upload_location(instance,filename):
         return "course_images/%s/%s"%(instance.course_name,filename)
 
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE,null=True,default=None)
     course_name = models.CharField(max_length=300,default=None)
     author = models.ForeignKey(TeacherProfile,on_delete=models.CASCADE,null=True,default=None)
     course_description = models.TextField(null=True)

@@ -1,7 +1,8 @@
 from django.contrib import auth
+from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
-
+from django.shortcuts import get_object_or_404
 from .serializer import UserSerializerAPI, TeacherProfileSerializer
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -51,3 +52,18 @@ def UpdateTeacherProfileView(request,pk):
         serializer.data['user'].pop('password')
         #print(serializer.data)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def TestLoginView(request):
+    user = User.objects.get(email=request.data['username'])
+    token = None
+    try:
+        token = Token.objects.get(user=user)
+    except:
+        pass
+    status = False
+    if token!=None:
+        status = True
+    return Response({
+        "status" : status
+    })
