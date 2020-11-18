@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK={
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication'
+        #'rest_framework.authentication.SessionAuthentication'
     )
 }
 OLD_PASSWORD_FIELD_ENABLED = True
