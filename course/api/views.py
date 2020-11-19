@@ -43,10 +43,11 @@ class CourseRetrieve(RetrieveAPIView):
 # views for authenticated users
 
 # creating courses and modules
-@permission_classes([IsAuthenticated])
+
 @api_view(['POST'])
-def CreateCourse(request,pk):
-    teacher = TeacherProfile.objects.get(user=request.user)
+@permission_classes([IsAuthenticated])
+def CreateCourse(request,pk,upk):
+    teacher = TeacherProfile.objects.get(user_id=upk)
     subject = Subject.objects.get(id=pk)
     course = Course(author=teacher,subject=subject)
     serializer = CourseCreateSerializer(course,data=request.data)
@@ -55,7 +56,7 @@ def CreateCourse(request,pk):
         return Response(serializer.data)
     return Response(serializer.errors)
 
-# class CreateCourseView(CreateAPIView):
+# class CreateCourse(CreateAPIView):
 #     queryset = Course.objects.all()
 #     serializer_class = CourseCreateSerializer
 #     permission_classes = [IsAuthenticated]
@@ -75,8 +76,8 @@ class UpdateCourse(RetrieveUpdateAPIView):
 
 # delete course
 
-@permission_classes([IsAuthenticated])
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def DeleteCourse(request,pk):
     course=Course.objects.get(id=pk)
     course.delete()
@@ -86,8 +87,8 @@ def DeleteCourse(request,pk):
 # get list of courses related to the teacher
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def TeacherCourses(request):
-    teacher = TeacherProfile.objects.get(user=request.user)
+def TeacherCourses(request,upk):
+    teacher = TeacherProfile.objects.get(user_id=upk)
     courses = Course.objects.filter(author=teacher)
     serializer = CourseDetailSerializer(courses,many=True)
     return Response(serializer.data)
@@ -95,8 +96,9 @@ def TeacherCourses(request):
 # creating a separate module
 
 
-@permission_classes((IsAuthenticated))
+
 @api_view(['POST'])
+@permission_classes((IsAuthenticated))
 def CreateModule(request,pk):
     course = Course.objects.get(id=pk)
     module = Module(course=course)
@@ -112,8 +114,9 @@ def CreateModule(request,pk):
 
 # update Module
 
-@permission_classes([IsAuthenticated])
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def UpdateModule(request,pk):
     module=Module.objects.get(id=pk)
     serializer = ModuleSerializer(instance=module,data=request.data)
@@ -124,8 +127,8 @@ def UpdateModule(request,pk):
 
 # Delete Module
 
-@permission_classes([IsAuthenticated])
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def DeleteModule(request,pk):
     module=Module.objects.get(id=pk)
     module.delete()
@@ -136,11 +139,11 @@ def DeleteModule(request,pk):
 
 # course Enroll
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST'])
-def EnrollCourse(request,pk):
+@permission_classes([IsAuthenticated])
+def EnrollCourse(request,pk,upk):
     course = Course.objects.get(id=pk)
-    student = StudentProfile.objects.get(user=request.user)
+    student = StudentProfile.objects.get(user_id=upk)
     couponList = Coupon.objects.filter(course=course)
     for c in couponList:
         coupon = str(c.id)+":"+str(c.course.id)+":"+str(c.expire_date)
@@ -161,8 +164,8 @@ def EnrollCourse(request,pk):
                                 serializer.data['student']['user'].pop('password')
                             return Response(serializer.data)
                         return Response(serializer.errors)
-                    return Response("You have already enrolled this course...")
-                return Response("Coupon is not valid")
+                    return Response({"message":"You have already enrolled this course..."})
+                return Response({"message":"Coupon is not valid"})
 
     return Response("coupon is not found")
 
@@ -171,8 +174,8 @@ def EnrollCourse(request,pk):
 # Listing Enrolled Courses
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def MyCourses(request):
-    student = StudentProfile.objects.get(user=request.user)
+def MyCourses(request,upk):
+    student = StudentProfile.objects.get(user_id=upk)
     courses_enrolled = Enrollment.objects.filter(student=student)
     serializer = MycoursesSerializer(courses_enrolled,many=True)
     return Response(serializer.data)
@@ -188,14 +191,13 @@ class ViewEnrolledCourse(RetrieveAPIView):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def CouponGenerator(request, count, pk):
     course = Course.objects.filter(id=pk).first()
-    expire_date = datetime(2021, 11, 7)
-
     try:
-        couponList = Coupon.objects.bulk_create(
+        Coupon.objects.bulk_create(
             [
-                Coupon(course=course, expire_date=expire_date, coupon_key="")
+                Coupon(course=course, coupon_key="")
                 for __ in range(count)
             ]
         )
@@ -212,8 +214,9 @@ def CouponGenerator(request, count, pk):
     else:
         return Response({"message":"Something went wrong"})
 
-@permission_classes([IsAuthenticated])
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def AvailableCoupon(request, pk):
     course = Course.objects.get(id=pk)
     couponList = Coupon.objects.filter(isValid=True, course=course )
@@ -225,9 +228,8 @@ def AvailableCoupon(request, pk):
     return Response(serializer.data)
 
 # issue coupons
-
-@permission_classes([IsAuthenticated])
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def IssueCoupon(request):
     for i in range(len(request.data['issued_coupons'])):
         coupon = Coupon.objects.get(id=request.data['issued_coupons'][i])
@@ -237,10 +239,11 @@ def IssueCoupon(request):
     return Response({"message":"successfully issued"})
 
 # create subject
-@permission_classes([IsAuthenticated])
+
 @api_view(['POST'])
-def CreateSubject(request):
-    author = TeacherProfile.objects.get(user=request.user)
+@permission_classes((IsAuthenticated,))
+def CreateSubject(request,pk):
+    author = TeacherProfile.objects.get(user_id=pk)
     serializer = SubjectSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(author=author)
@@ -248,8 +251,8 @@ def CreateSubject(request):
 
 # update subject
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def UpdateSubject(request,pk):
     subject = Subject.objects.get(id=pk)
     serializer = SubjectSerializer(instance=subject, data=request.data)
@@ -260,8 +263,8 @@ def UpdateSubject(request,pk):
 
 # delete subject
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def DeleteSubject(request,pk):
     subject = Subject.objects.get(id=pk)
     subject.delete()
@@ -274,12 +277,13 @@ def SubjectList(request):
     serializer = SubjectSerializer(subjects, many=True)
     return Response(serializer.data)
 
+
 # subject list of teacher
 
-@permission_classes([IsAuthenticated])
 @api_view(['GET'])
-def TeacherSubject(request):
-    teacher = TeacherProfile.objects.get(user=request.user)
+@permission_classes([IsAuthenticated])
+def TeacherSubject(request,upk):
+    teacher = TeacherProfile.objects.get(user_id=upk)
     subject = Subject.objects.filter(author=teacher)
     serializer = SubjectSerializer(subject,many=True)
     return Response(serializer.data)
