@@ -1,8 +1,6 @@
 from django.db import models
 from account.models import TeacherProfile,StudentProfile
-from datetime import date
-import django.utils.timezone
-
+from django.utils.timezone import now
 
 class Subject(models.Model):
     def upload_location(instance, filename):
@@ -29,7 +27,7 @@ class Course(models.Model):
     author = models.ForeignKey(TeacherProfile,on_delete=models.CASCADE,null=True,default=None)
     course_description = models.TextField(null=True)
     course_cover = models.ImageField(null=True,blank=True,upload_to=upload_location)
-    created_at = models.DateTimeField(default=django.utils.timezone.now())
+    created_at = models.DateTimeField(default=now)
 
     def __str__(self):
         return self.course_name
