@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'k2so0lb#e)wc7-xi#6q&eb5x_2iqusgnyy63((5_t@@4hdktr*'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -151,4 +152,4 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'static/')
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR,'static/images/')
