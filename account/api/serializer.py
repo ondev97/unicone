@@ -47,6 +47,14 @@ class CustomTokenSerializer(TokenSerializer):
         fields = ('key', 'user')
 
 
+#
+# class TeacherProfileSerializer(serializers.ModelSerializer):
+#     user = UserSerializerAPI(many=True)
+#     class Meta:
+#         fields = ['id','profile_pic','description','education1','education2','education3','experience1','experience2','experience3','user']
+#         model = TeacherProfile
+#         depth = 1
+
 
 class TeacherProfileSerializer(serializers.ModelSerializer):
 
@@ -54,4 +62,3 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = TeacherProfile
         depth = 1
-

@@ -43,8 +43,8 @@ def TeacherProfileView(request,pk):
 
 # Update User profile of Teacher
 
-@permission_classes([IsAuthenticated])
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser,FormParser])
 def UpdateTeacherProfileView(request,pk):
     teacher = TeacherProfile.objects.get(user_id=pk)
