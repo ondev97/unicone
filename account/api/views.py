@@ -1,6 +1,6 @@
 from django.contrib import auth
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -69,3 +69,26 @@ def TestLoginView(request):
     return Response({
         "status" : status
     })
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def UpdateUser(request,pk):
+#     user = User.objects.get(id=pk)
+#     print(user.password)
+#     dic = request.data
+#     dic['password'] = user.password
+#     serializer = UserSerializerAPI(instance=user,data=dic)
+#     if serializer.is_valid():
+#         print("valid")
+#         serializer.save()
+#     return Response (serializer.data)
+
+class UpdateUser(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializerAPI
+    queryset = User.objects.all()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        instance.set_password(instance.password)
+        instance.save()
