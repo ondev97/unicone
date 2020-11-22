@@ -46,7 +46,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=100,null=True)
     last_name = models.CharField(max_length=100,null=True)
-    phone_no = models.CharField(max_length=12,null=True)
+    phone_no = models.CharField(max_length=12, null=True)
     date_joined = models.DateField(
         verbose_name='date joined', auto_now_add=True)
     last_login = models.DateField(verbose_name='last login', auto_now=True)
@@ -55,7 +55,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
-
+    address = models.CharField(max_length=500, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -76,13 +76,14 @@ class User(AbstractBaseUser,PermissionsMixin):
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to="pro_pic_teacher/",null=True,blank=True)
-    description = models.CharField(max_length=250,null=True)
-    education1 = models.CharField(max_length=255,null=True)
-    education2 = models.CharField(max_length=255,null=True)
-    education3 = models.CharField(max_length=255,null=True)
-    experience1 = models.CharField(max_length=255,null=True)
-    experience2 = models.CharField(max_length=255,null=True)
-    experience3 = models.CharField(max_length=255,null=True)
+    description = models.CharField(max_length=500,null=True,blank=True)
+    education1 = models.CharField(max_length=255,null=True,blank=True)
+    education2 = models.CharField(max_length=255,null=True,blank=True)
+    education3 = models.CharField(max_length=255,null=True,blank=True)
+    experience1 = models.CharField(max_length=255,null=True,blank=True)
+    experience2 = models.CharField(max_length=255,null=True,blank=True)
+    experience3 = models.CharField(max_length=255,null=True,blank=True)
+
 
 
     def __str__(self):
