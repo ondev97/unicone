@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -9,6 +10,8 @@ from rest_framework.decorators import api_view, permission_classes, parser_class
 from rest_framework.permissions import IsAuthenticated
 from ..models import TeacherProfile,User
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException
+
 
 
 # Create your views here.
@@ -89,6 +92,12 @@ class UpdateUser(RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     def perform_update(self, serializer):
-        instance = serializer.save()
-        instance.set_password(instance.password)
-        instance.save()
+        if self.request.user.check_password(self.request.data['password']):
+            instance = serializer.save()
+            print(instance.password)
+            instance.set_password(instance.password)
+            instance.save()
+        else:
+            print("not matched")
+            raise APIException("Password's not matching")
+
