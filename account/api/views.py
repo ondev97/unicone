@@ -1,6 +1,7 @@
 from django.contrib import auth
+from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,8 @@ from rest_framework.decorators import api_view, permission_classes, parser_class
 from rest_framework.permissions import IsAuthenticated
 from ..models import TeacherProfile,User
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException
+
 
 
 # Create your views here.
@@ -69,3 +72,32 @@ def TestLoginView(request):
     return Response({
         "status" : status
     })
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def UpdateUser(request,pk):
+#     user = User.objects.get(id=pk)
+#     print(user.password)
+#     dic = request.data
+#     dic['password'] = user.password
+#     serializer = UserSerializerAPI(instance=user,data=dic)
+#     if serializer.is_valid():
+#         print("valid")
+#         serializer.save()
+#     return Response (serializer.data)
+
+class UpdateUser(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializerAPI
+    queryset = User.objects.all()
+
+    def perform_update(self, serializer):
+        if self.request.user.check_password(self.request.data['password']):
+            instance = serializer.save()
+            print(instance.password)
+            instance.set_password(instance.password)
+            instance.save()
+        else:
+            print("not matched")
+            raise APIException("Password's not matching")
+

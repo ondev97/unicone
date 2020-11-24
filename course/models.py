@@ -28,6 +28,7 @@ class Course(models.Model):
     course_description = models.TextField(null=True)
     course_cover = models.ImageField(null=True,blank=True,upload_to=upload_location)
     created_at = models.DateTimeField(default=now)
+    price = models.IntegerField()
 
     def __str__(self):
         return self.course_name
