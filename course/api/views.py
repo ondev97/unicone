@@ -49,12 +49,14 @@ class CourseRetrieve(RetrieveAPIView):
 def CreateCourse(request,pk):
     teacher = TeacherProfile.objects.get(user=request.user)
     subject = Subject.objects.get(id=pk)
-    course = Course(author=teacher,subject=subject)
-    serializer = CourseCreateSerializer(course,data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors)
+    if subject.author.user.id == request.user.id:
+        course = Course(author=teacher,subject=subject)
+        serializer = CourseCreateSerializer(course,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    return Response({"message":"you're not authorized to access this Subject"})
 
 # class CreateCourse(CreateAPIView):
 #     queryset = Course.objects.all()
