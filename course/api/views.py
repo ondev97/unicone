@@ -103,16 +103,17 @@ def TeacherCourses(request,upk):
 @permission_classes((IsAuthenticated))
 def CreateModule(request,pk):
     course = Course.objects.get(id=pk)
-    module = Module(course=course)
-    print("important", module.course)
-    if request.method == "POST":
-        serializer = ModuleSerializer(module, data=request.data)
+    if course.author.user.id == request.user.id:
+        module = Module(course=course)
+        if request.method == "POST":
+            serializer = ModuleSerializer(module, data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            print(serializer.data)
-            return Response(serializer.data)
-        return Response(serializer.errors)
+            if serializer.is_valid():
+                serializer.save()
+                print(serializer.data)
+                return Response(serializer.data)
+            return Response(serializer.errors)
+    return Response({"message":""}, status=403)
 
 # update Module
 
