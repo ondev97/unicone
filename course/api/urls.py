@@ -6,7 +6,7 @@ from .import views
 urlpatterns = [
     path('list/',views.ListCourse.as_view(),name='list_course'),
     path('list/<int:pk>/',views.CourseRetrieve.as_view(),name='course_info'),
-    path('createcourse/<int:pk>/<int:upk>/',views.CreateCourse,name='create_course'),
+    path('createcourse/<int:pk>/',views.CreateCourse,name='create_course'),
     path('updatecourse/<int:pk>/',views.UpdateCourse.as_view(),name='update_course'),
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
     path('enrollcourse/<int:pk>/<int:upk>/',views.EnrollCourse,name='enroll_course'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('deletecourse/<int:pk>/',views.DeleteCourse,name='delete_course'),
     path('deletemodule/<int:pk>/',views.DeleteModule,name='delete_module'),
     path('updatemodule/<int:pk>/',views.UpdateModule,name='update_module'),
-    path('createsubject/<int:pk>/',views.CreateSubject,name='create_subject'),
+    path('createsubject/',views.CreateSubject,name='create_subject'),
     path('updatesubject/<int:pk>/',views.UpdateSubject,name='update_subject'),
     path('deletesubject/<int:pk>/',views.DeleteSubject,name='delete_subject'),
     path('subjectlist/',views.SubjectList,name='list_subject'),

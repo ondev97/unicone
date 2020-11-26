@@ -46,8 +46,8 @@ class CourseRetrieve(RetrieveAPIView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def CreateCourse(request,pk,upk):
-    teacher = TeacherProfile.objects.get(user_id=upk)
+def CreateCourse(request,pk):
+    teacher = TeacherProfile.objects.get(user=request.user)
     subject = Subject.objects.get(id=pk)
     course = Course(author=teacher,subject=subject)
     serializer = CourseCreateSerializer(course,data=request.data)
@@ -242,8 +242,8 @@ def IssueCoupon(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-def CreateSubject(request,pk):
-    author = TeacherProfile.objects.get(user_id=pk)
+def CreateSubject(request):
+    author = TeacherProfile.objects.get(user=request.user)
     serializer = SubjectSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(author=author)
