@@ -288,6 +288,13 @@ def TeacherSubject(request,upk):
     serializer = SubjectSerializer(subject,many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def coursecount(request):
+    courses = Course.objects.count()
+    print(request.user)
+    return Response(courses)
+
+
 
 
 

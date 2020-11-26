@@ -24,5 +24,6 @@ urlpatterns = [
     path('deletesubject/<int:pk>/',views.DeleteSubject,name='delete_subject'),
     path('subjectlist/',views.SubjectList,name='list_subject'),
     path('teachersubject/<int:upk>/',views.TeacherSubject,name='teacher_subject'),
+    path('coursecount/',views.coursecount,name='course_count'),
 
 ]
