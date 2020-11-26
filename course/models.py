@@ -13,6 +13,7 @@ class Subject(models.Model):
     subject_type = models.CharField(max_length=100, null=True, blank=True)
     class_type = models.CharField(max_length=10, null=True, blank=True)
     short_description = models.CharField(max_length=300,blank=True,null=True)
+    created_at = models.DateTimeField(default=now)
 
     def __str__(self):
         return self.subject_name
@@ -30,6 +31,7 @@ class Course(models.Model):
     created_at = models.DateTimeField(default=now)
     price = models.IntegerField(default=0,null=True,blank=True)
     duration = models.CharField(max_length=20, null=True, blank=True)
+
 
     def __str__(self):
         return self.course_name
