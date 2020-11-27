@@ -252,6 +252,17 @@ def CreateSubject(request,pk):
         serializer.save(author=author)
     return Response(serializer.data)
 
+# view subject
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ViewSubject(request,pk):
+    subject = Subject.objects.get(id=pk)
+    if subject.author.user.id == request.user.id:
+        serializer = SubjectSerializer(subject)
+        return Response(serializer.data)
+    else:
+        return Response({"message":"you're unauthorized"},status=403)
+
 # update subject
 
 @api_view(['POST'])
@@ -287,7 +298,7 @@ def SubjectList(request):
 @permission_classes([IsAuthenticated])
 def TeacherSubject(request,upk):
     teacher = TeacherProfile.objects.get(user_id=upk)
-    subject = Subject.objects.filter(author=teacher)
+    subject = Subject.objects.filter(author=teacher).order_by('-id')
     serializer = SubjectSerializer(subject,many=True)
     return Response(serializer.data)
 

@@ -7,7 +7,7 @@ class Subject(models.Model):
         return "subject_images/%s/%s" % (instance.subject_name, filename)
 
     subject_name = models.CharField(max_length=200, null=True)
-    subject_cover = models.ImageField(null=True, blank=True, upload_to=upload_location)
+    subject_cover = models.ImageField(null=True, blank=True, upload_to=upload_location,default="subject_images/default.png")
     description = models.CharField(max_length=500, null=True, blank=True)
     author = models.ForeignKey(TeacherProfile,on_delete=models.CASCADE,null=True,default=None)
     subject_type = models.CharField(max_length=100, null=True, blank=True)
@@ -27,7 +27,7 @@ class Course(models.Model):
     course_name = models.CharField(max_length=300,default=None)
     author = models.ForeignKey(TeacherProfile,on_delete=models.CASCADE,null=True,default=None)
     course_description = models.TextField(null=True)
-    course_cover = models.ImageField(null=True,blank=True,upload_to=upload_location)
+    course_cover = models.ImageField(null=True,blank=True,upload_to=upload_location,default="course_images/default.png")
     created_at = models.DateTimeField(default=now)
     price = models.IntegerField(default=0,null=True,blank=True)
     duration = models.CharField(max_length=20, null=True, blank=True)
