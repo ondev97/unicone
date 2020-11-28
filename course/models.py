@@ -44,12 +44,21 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,related_name='modules')
     module_name = models.CharField(max_length=100)
     module_content = models.CharField(max_length=100)
-    file = models.FileField(null=True,upload_to=upload_location)
-
-
+    # file = models.FileField(null=True,upload_to=upload_location)
 
     def __str__(self):
         return self.module_name+ ""+" "+ self.course.course_name
+
+
+class ModuleFile(models.Model):
+    def upload_location(instance, filename):
+        return "course_files/%s/%s" % (instance.module.course.course_name, filename)
+
+    module = models.ForeignKey(Module, on_delete=models.CASCADE, null=True, blank=True)
+    file = models.FileField(null=True, upload_to=upload_location)
+
+    def __str__(self):
+        return self.module.module_name + " " + str(self.id)
 
 class Enrollment(models.Model):
     enroll_key = models.CharField(max_length=100,default="Text here",null=True)

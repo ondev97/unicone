@@ -9,6 +9,7 @@ urlpatterns = [
     path('createcourse/<int:pk>/<int:upk>/',views.CreateCourse,name='create_course'),
     path('updatecourse/<int:pk>/',views.UpdateCourse.as_view(),name='update_course'),
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
+    path('createmodulefile/<int:pk>/',views.CreateModuleFile,name='create_modulefile'),
     path('enrollcourse/<int:pk>/<int:upk>/',views.EnrollCourse,name='enroll_course'),
     path('coupon/<int:count>/<int:pk>/',views.CouponGenerator,name='coupon_generator'),
     path('availablecoupon/<int:pk>/',views.AvailableCoupon,name='available_coupon'),

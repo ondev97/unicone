@@ -3,9 +3,10 @@ from cryptography.fernet import Fernet
 from datetime import datetime
 from aifc import Error
 
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes
-from course.models import Course, Module, Enrollment, Coupon,Subject
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
 from course.api.serializer import (CourseSerializer,
@@ -110,9 +111,26 @@ def CreateModule(request,pk):
             serializer = ModuleSerializer(module, data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                print(serializer.data)
                 return Response(serializer.data)
             return Response(serializer.errors)
+    return Response({"message":"you're not authorized"},status=403)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([FormParser, MultiPartParser])
+def CreateModuleFile(request,pk):
+    module = Module.objects.get(id=pk)
+    if module.course.author.user.id == request.user.id:
+        try:
+            for file in request.FILES.getlist('files'):
+                ModuleFile.objects.create(module=module, file=file)
+            return Response({"message":"successfully uploaded"})
+        except Error:
+            return Response({"message": "Unable to create the bulk of files"},status=500)
+        else:
+            return Response({"message": "Unable to create the bulk of files"},status=500)
     return Response({"message":"you're not authorized"},status=403)
 
 
