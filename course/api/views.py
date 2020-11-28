@@ -42,6 +42,8 @@ class CourseRetrieve(RetrieveAPIView):
 
 # views for authenticated users
 
+
+
 # creating courses and modules
 
 @api_view(['POST'])
@@ -97,8 +99,6 @@ def TeacherCourses(request,upk):
 
 # creating a separate module
 
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateModule(request,pk):
@@ -114,8 +114,8 @@ def CreateModule(request,pk):
             return Response(serializer.errors)
     return Response({"message":"you're not authorized"},status=403)
 
-# update Module
 
+# update Module
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
