@@ -16,7 +16,8 @@ from course.api.serializer import (CourseSerializer,
                                    EnrolledCourseSerializer,
                                    MycoursesSerializer,
                                    CouponSerializer,
-                                   SubjectSerializer)
+                                   SubjectSerializer,
+                                   SerializerForCourse)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -306,7 +307,15 @@ def coursecount(request):
     print(request.user)
     return Response(courses)
 
+# courses inside a subject
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def CoursesIntheSubject(request,pk):
+    subject = Subject.objects.get(id=pk)
+    courses = Course.objects.filter(subject=subject)
+    serializer = SerializerForCourse(courses, many=True)
+    return Response(serializer.data)
 
 
 
