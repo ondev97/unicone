@@ -23,12 +23,27 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id','course_name','author','course_cover','course_description']
+        fields = ['id','course_name','author','course_cover','course_description','subject']
 
     def get_author(self, obj):
         return str(obj.author.user.username)
 
 # serializer for authenticated users
+
+# serializer for courses inside subject
+
+class SerializerForCourse(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = ["id","course_name","course_description","course_cover","created_at","price","duration","author"]
+        depth = 2
+
+    def get_author(self, obj):
+        return str(obj.author.user.username)
+
+
 
 # Serializer setup for Creating course and adding modules
 class ModuleSerializer(serializers.ModelSerializer):
