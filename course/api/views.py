@@ -100,14 +100,13 @@ def TeacherCourses(request,upk):
 
 
 @api_view(['POST'])
-@permission_classes((IsAuthenticated))
+@permission_classes([IsAuthenticated])
 def CreateModule(request,pk):
     course = Course.objects.get(id=pk)
     if course.author.user.id == request.user.id:
         module = Module(course=course)
         if request.method == "POST":
             serializer = ModuleSerializer(module, data=request.data)
-
             if serializer.is_valid():
                 serializer.save()
                 print(serializer.data)
@@ -272,7 +271,6 @@ def UpdateSubject(request,pk):
     serializer = SubjectSerializer(instance=subject, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        print("updated")
     return Response(serializer.data)
 
 # delete subject
