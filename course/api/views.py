@@ -311,8 +311,13 @@ def SubjectList(request):
 def TeacherSubject(request,upk):
     teacher = TeacherProfile.objects.get(user_id=upk)
     subject = Subject.objects.filter(author=teacher).order_by('-id')
-    serializer = SubjectSerializer(subject,many=True)
-    return Response(serializer.data)
+    paginator = PageNumberPagination()
+    paginator.page_size = 2
+    result_page = paginator.paginate_queryset(subject, request)
+    serializer = SubjectSerializer(result_page,many=True)
+    #serializer.data['author']['user'].pop('password')
+    #print(serializer.data)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 def coursecount(request):
