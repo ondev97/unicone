@@ -297,7 +297,7 @@ def DeleteSubject(request,pk):
 @api_view(['GET'])
 def SubjectList(request):
     paginator = PageNumberPagination()
-    paginator.page_size=2
+    paginator.page_size=5
     subjects = Subject.objects.all()
     result_page = paginator.paginate_queryset(subjects,request)
     serializer = SubjectViewSerializer(result_page,many=True)
@@ -312,7 +312,7 @@ def TeacherSubject(request,upk):
     teacher = TeacherProfile.objects.get(user_id=upk)
     subject = Subject.objects.filter(author=teacher).order_by('-id')
     paginator = PageNumberPagination()
-    paginator.page_size = 2
+    paginator.page_size = 5
     result_page = paginator.paginate_queryset(subject, request)
     serializer = SubjectSerializer(result_page,many=True)
     #serializer.data['author']['user'].pop('password')
