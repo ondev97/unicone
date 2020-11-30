@@ -122,3 +122,13 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
         depth = 2
+
+class SubjectViewSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Subject
+        fields = ['id','subject_name','subject_cover','subject_type','class_type','author']
+
+    def get_author(self, obj):
+        return str(obj.author.user.username)

@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes, parser_class
 from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
 from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
                                    CourseCreateSerializer,
@@ -18,7 +19,8 @@ from course.api.serializer import (CourseSerializer,
                                    MycoursesSerializer,
                                    CouponSerializer,
                                    SubjectSerializer,
-                                   SerializerForCourse)
+                                   SerializerForCourse,
+                                   SubjectViewSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -62,16 +64,6 @@ def CreateCourse(request,pk,upk):
         return Response(serializer.errors)
     return Response({"message":"you're not authorized to access this Subject"}, status=403)
 
-# class CreateCourse(CreateAPIView):
-#     queryset = Course.objects.all()
-#     serializer_class = CourseCreateSerializer
-#     permission_classes = [IsAuthenticated]
-#
-#     def perform_create(self, serializer):
-#         print("user:-" ,self.request.user)
-#         teacher = TeacherProfile.objects.get(user=self.request.user.id)
-#         subject = Subject.objects.get(id)
-#         serializer.save(author=teacher)
 
 # updating courses and modules within the course
 class UpdateCourse(RetrieveUpdateAPIView):
@@ -304,9 +296,12 @@ def DeleteSubject(request,pk):
 # subject list
 @api_view(['GET'])
 def SubjectList(request):
+    paginator = PageNumberPagination()
+    paginator.page_size=2
     subjects = Subject.objects.all()
-    serializer = SubjectSerializer(subjects, many=True)
-    return Response(serializer.data)
+    result_page = paginator.paginate_queryset(subjects,request)
+    serializer = SubjectViewSerializer(result_page,many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 # subject list of teacher
