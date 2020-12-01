@@ -331,7 +331,7 @@ def coursecount(request):
 @permission_classes([IsAuthenticated])
 def CoursesIntheSubject(request,pk):
     subject = Subject.objects.get(id=pk)
-    courses = Course.objects.filter(subject=subject)
+    courses = Course.objects.filter(subject=subject).order_by('-id')
     serializer = SerializerForCourse(courses, many=True)
     return Response(serializer.data)
 
