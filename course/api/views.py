@@ -87,7 +87,7 @@ def DeleteCourse(request,pk):
 @permission_classes([IsAuthenticated])
 def TeacherCourses(request,upk):
     teacher = TeacherProfile.objects.get(user_id=upk)
-    courses = Course.objects.filter(author=teacher)
+    courses = Course.objects.filter(author=teacher).order_by('-id')
     serializer = CourseDetailSerializer(courses,many=True)
     return Response(serializer.data)
 
