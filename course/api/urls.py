@@ -20,6 +20,8 @@ urlpatterns = [
     path('deletemodule/<int:pk>/', views.DeleteModule, name='delete_module'),
     path('updatemodule/<int:pk>/', views.UpdateModule, name='update_module'),
     path('createmodulefile/<int:pk>/',views.CreateModuleFile,name='create_modulefile'),
+    path('deletemodulefile/<int:pk>/',views.DeleteModuleFile,name='delete_modulefile'),
+    path('readmodulefile/<int:pk>/',views.ReadModuleFile,name='read_modulefile'),
 
     # urls for coupon generation
     path('coupon/<int:count>/<int:pk>/',views.CouponGenerator,name='coupon_generator'),
@@ -30,7 +32,7 @@ urlpatterns = [
     path('createsubject/<int:pk>/',views.CreateSubject,name='create_subject'),
     path('updatesubject/<int:pk>/',views.UpdateSubject,name='update_subject'),
     path('deletesubject/<int:pk>/',views.DeleteSubject,name='delete_subject'),
-    path('subjectlist/',views.SubjectList,name='list_subject'),
+    path('subjectlist/<str:string>/',views.SubjectList,name='list_subject'),
     path('subject/<int:pk>/',views.ViewSubject,name='view_subject'),
     path('teachersubject/<int:upk>/',views.TeacherSubject,name='teacher_subject'),
     path('coursecount/',views.coursecount,name='course_count'),

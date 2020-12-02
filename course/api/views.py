@@ -20,7 +20,7 @@ from course.api.serializer import (CourseSerializer,
                                    CouponSerializer,
                                    SubjectSerializer,
                                    SerializerForCourse,
-                                   SubjectViewSerializer)
+                                   SubjectViewSerializer, ModuleFileSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -125,6 +125,20 @@ def CreateModuleFile(request,pk):
             return Response({"message": "Unable to create the bulk of files"},status=500)
     return Response({"message":"you're not authorized"},status=403)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def DeleteModuleFile(request,pk):
+    file = ModuleFile.objects.get(id=pk)
+    file.delete()
+    return Response({"message": "Module file Successfully Deleted"})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ReadModuleFile(request,pk):
+    files = ModuleFile.objects.filter(module_id=pk)
+    serializer = ModuleFileSerializer(files, many=True)
+    return Response(serializer.data)
+
 
 # update Module
 
@@ -159,9 +173,9 @@ def EnrollCourse(request,pk,upk):
     student = StudentProfile.objects.get(user_id=upk)
     couponList = Coupon.objects.filter(course=course)
     for c in couponList:
-        coupon = str(c.id)+":"+str(c.course.id)+":"+str(c.expire_date)
-        couponHash = hashlib.shake_256(coupon.encode()).hexdigest(5)
-        if str(request.data['coupon_key'])==str(couponHash):
+        # coupon = str(c.id)+":"+str(c.course.id)
+        # couponHash = hashlib.shake_256(coupon.encode()).hexdigest(5)
+        if str(request.data['coupon_key'])==str(c.coupon_key):
             enroll = Enrollment(course=course,student=student, enroll_key=request.data['coupon_key'])
             condition = c.isValid==True and c.isIssued==True
             if request.method == "POST":
@@ -206,36 +220,36 @@ class ViewEnrolledCourse(RetrieveAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CouponGenerator(request, count, pk):
-    course = Course.objects.filter(id=pk).first()
-    try:
-        Coupon.objects.bulk_create(
-            [
-                Coupon(course=course, coupon_key="")
-                for __ in range(count)
-            ]
-        )
-        couponL = Coupon.objects.filter(coupon_key="")
-        for c in list(couponL):
-            serializer = CouponSerializer(instance=c, data=request.data)
-            if serializer.is_valid():
-                coupon = str(c.id) + ":" + str(c.course.id) + ":" + str(c.expire_date)
-                coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
-                serializer.save(coupon_key=coupon_key)
-        return Response({"message":"successfully created"})
-    except Error:
-        return  Response({"message":"Unable to create the bulk of coupons"})
-    else:
-        return Response({"message":"Something went wrong"})
-
+    # course = Course.objects.filter(id=pk).first()
+    # try:
+    #     Coupon.objects.bulk_create(
+    #         [
+    #             Coupon(course=course, coupon_key="")
+    #             for __ in range(count)
+    #         ]
+    #     )
+    #     couponL = Coupon.objects.filter(coupon_key="")
+    #     for c in list(couponL):
+    #         serializer = CouponSerializer(instance=c, data=request.data)
+    #         if serializer.is_valid():
+    #             coupon = str(c.id) + ":" + str(c.course.id)
+    #             coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
+    #             serializer.save(coupon_key=coupon_key)
+    #     return Response({"message":"successfully created"})
+    # except Error:
+    #     return  Response({"message":"Unable to create the bulk of coupons"})
+    # else:
+    #     return Response({"message":"Something went wrong"})
+    return Response({"message":"fuck you bitch"})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def AvailableCoupon(request, pk):
     course = Course.objects.get(id=pk)
     couponList = Coupon.objects.filter(isValid=True, course=course )
-    for i in range(len(couponList)):
-        coupon = str(couponList[i].id)+":"+str(couponList[i].course.id)+":"+str(couponList[i].expire_date)
-        couponList[i].coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
+    # for i in range(len(couponList)):
+    #     coupon = str(couponList[i].id)+":"+str(couponList[i].course.id)
+    #     couponList[i].coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
 
     serializer = CouponSerializer(couponList, many=True)
     return Response(serializer.data)
@@ -316,7 +330,8 @@ def TeacherSubject(request,upk):
     result_page = paginator.paginate_queryset(subject, request)
     serializer = SubjectSerializer(result_page,many=True)
     #serializer.data['author']['user'].pop('password')
-    #print(serializer.data)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['author']['user'].pop('password')
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])

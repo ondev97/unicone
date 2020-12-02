@@ -36,8 +36,8 @@ class LogoutView(APIView):
 
 
 # Retrieve User profile of Teacher
-@permission_classes([IsAuthenticated])
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def TeacherProfileView(request,pk):
     teacher = TeacherProfile.objects.get(user_id=pk)
     serializer = TeacherProfileSerializer(teacher)
