@@ -28,6 +28,8 @@ from rest_framework.generics import( ListAPIView,
                                      UpdateAPIView,
                                      ListCreateAPIView)
 from rest_framework.permissions import IsAuthenticated
+from .filters import SubjectFilter
+
 
 # Views for Unauthenticated Users
 
@@ -308,28 +310,43 @@ def DeleteSubject(request,pk):
     return Response("Subject Successfully Deleted")
 
 # subject list
+# @api_view(['GET'])
+# def SubjectList(request):
+#     paginator = PageNumberPagination()
+#     paginator.page_size=5
+#     subjects =SubjectFilter ( request.GET, queryset= Subject.objects.all())
+#     result_page = paginator.paginate_queryset(subjects.queryset,request)
+#     serializer = SubjectViewSerializer(result_page,many=True)
+#     return paginator.get_paginated_response(serializer.data)
+
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def SubjectList(request):
+    subjects = Subject.objects.all()
+    filterset = SubjectFilter(request.GET, queryset=subjects)
+    if filterset.is_valid():
+         queryset = filterset.qs
     paginator = PageNumberPagination()
     paginator.page_size=5
-    subjects = Subject.objects.all()
-    result_page = paginator.paginate_queryset(subjects,request)
-    serializer = SubjectViewSerializer(result_page,many=True)
+    result_page = paginator.paginate_queryset(queryset, request)
+    serializer = SubjectViewSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 
-# subject list of teacher
 
+# subject list of teacher
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def TeacherSubject(request,upk):
     teacher = TeacherProfile.objects.get(user_id=upk)
     subject = Subject.objects.filter(author=teacher).order_by('-id')
+    filterset = SubjectFilter(request.GET,queryset=subject)
+    if filterset.is_valid():
+         queryset = filterset.qs
     paginator = PageNumberPagination()
     paginator.page_size = 5
-    result_page = paginator.paginate_queryset(subject, request)
+    result_page = paginator.paginate_queryset(queryset, request)
     serializer = SubjectSerializer(result_page,many=True)
-    #serializer.data['author']['user'].pop('password')
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
     return paginator.get_paginated_response(serializer.data)
