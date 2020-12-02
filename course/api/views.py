@@ -220,27 +220,27 @@ class ViewEnrolledCourse(RetrieveAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CouponGenerator(request, count, pk):
-    # course = Course.objects.filter(id=pk).first()
-    # try:
-    #     Coupon.objects.bulk_create(
-    #         [
-    #             Coupon(course=course, coupon_key="")
-    #             for __ in range(count)
-    #         ]
-    #     )
-    #     couponL = Coupon.objects.filter(coupon_key="")
-    #     for c in list(couponL):
-    #         serializer = CouponSerializer(instance=c, data=request.data)
-    #         if serializer.is_valid():
-    #             coupon = str(c.id) + ":" + str(c.course.id)
-    #             coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
-    #             serializer.save(coupon_key=coupon_key)
-    #     return Response({"message":"successfully created"})
-    # except Error:
-    #     return  Response({"message":"Unable to create the bulk of coupons"})
-    # else:
-    #     return Response({"message":"Something went wrong"})
-    return Response({"message":"fuck you bitch"})
+    course = Course.objects.filter(id=pk).first()
+    try:
+        Coupon.objects.bulk_create(
+            [
+                Coupon(course=course, coupon_key="")
+                for __ in range(count)
+            ]
+        )
+        couponL = Coupon.objects.filter(coupon_key="")
+        for c in list(couponL):
+            serializer = CouponSerializer(instance=c, data=request.data)
+            if serializer.is_valid():
+                coupon = str(c.id) + ":" + str(c.course.id)
+                coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
+                serializer.save(coupon_key=coupon_key)
+        return Response({"message":"successfully created"})
+    except Error:
+        return  Response({"message":"Unable to create the bulk of coupons"})
+    else:
+        return Response({"message":"Something went wrong"})
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
