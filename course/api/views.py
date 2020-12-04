@@ -141,6 +141,14 @@ def ReadModuleFile(request,pk):
     serializer = ModuleFileSerializer(files, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ReadModule(request,pk):
+    course = Course.objects.get(id=pk)
+    module = Module.objects.filter(course=course)
+    serializer = ModuleSerializer(module, many=True)
+    return Response(serializer.data)
+
 
 # update Module
 
@@ -302,7 +310,7 @@ def UpdateSubject(request,pk):
 
 # delete subject
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def DeleteSubject(request,pk):
     subject = Subject.objects.get(id=pk)
