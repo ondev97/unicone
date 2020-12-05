@@ -264,6 +264,18 @@ def AvailableCoupon(request, pk):
     serializer = CouponSerializer(couponList, many=True)
     return Response(serializer.data)
 
+# Issued Coupons
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def IssuedCoupon(request, pk):
+    course = Course.objects.get(id=pk)
+    couponList = Coupon.objects.filter(isValid=True, isIssued=True, course=course )
+    serializer = CouponSerializer(couponList, many=True)
+    return Response(serializer.data)
+
+
+
+
 # issue coupons
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

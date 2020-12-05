@@ -27,6 +27,7 @@ urlpatterns = [
     # urls for coupon generation
     path('coupon/<int:count>/<int:pk>/',views.CouponGenerator,name='coupon_generator'),
     path('availablecoupon/<int:pk>/',views.AvailableCoupon,name='available_coupon'),
+    path('issuedcoupon/<int:pk>/',views.IssuedCoupon,name='issued_coupon'),
     path('issuecoupon/',views.IssueCoupon,name='issue_coupon'),
 
     # Urls for subjects
