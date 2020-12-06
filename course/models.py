@@ -53,7 +53,7 @@ class Module(models.Model):
 class ModuleFile(models.Model):
     def upload_location(instance, filename):
         return "course_files/%s/%s" % (instance.module.course.course_name, filename)
-
+    file_name = models.CharField(max_length=300,blank=True,null=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE, null=True, blank=True)
     file = models.FileField(null=True, upload_to=upload_location)
 
