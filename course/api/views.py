@@ -44,6 +44,7 @@ class ListCourse(ListAPIView):
 class CourseRetrieve(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseDetailSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 # views for authenticated users
