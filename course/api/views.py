@@ -136,14 +136,14 @@ def DeleteModuleFile(request,pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def ReadModuleFile(request,pk):
+def GetModuleFiles(request,pk):
     files = ModuleFile.objects.filter(module_id=pk)
     serializer = ModuleFileSerializer(files, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def ReadModule(request,pk):
+def GetModules(request,pk):
     course = Course.objects.get(id=pk)
     module = Module.objects.filter(course=course)
     serializer = ModuleSerializer(module, many=True)

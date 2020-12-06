@@ -19,10 +19,10 @@ urlpatterns = [
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
     path('deletemodule/<int:pk>/', views.DeleteModule, name='delete_module'),
     path('updatemodule/<int:pk>/', views.UpdateModule, name='update_module'),
-    path('readmodule/<int:pk>/', views.ReadModule, name='read_module'),
+    path('getmodules/<int:pk>/', views.GetModules, name='read_module'),
     path('createmodulefile/<int:pk>/',views.CreateModuleFile,name='create_modulefile'),
     path('deletemodulefile/<int:pk>/',views.DeleteModuleFile,name='delete_modulefile'),
-    path('readmodulefile/<int:pk>/',views.ReadModuleFile,name='read_modulefile'),
+    path('getmodulefiles/<int:pk>/',views.GetModuleFiles,name='read_modulefile'),
 
     # urls for coupon generation
     path('coupon/<int:count>/<int:pk>/',views.CouponGenerator,name='coupon_generator'),
