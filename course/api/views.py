@@ -120,7 +120,7 @@ def CreateModuleFile(request,pk):
     if module.course.author.user.id == request.user.id:
         try:
             i=0
-            names = request.FILES.getlist('file_name')
+            names = request.FILES.getlist('file_names')
             for file in request.FILES.getlist('files'):
                 ModuleFile.objects.create(module=module, file=file, file_name=names[i])
                 i+=1
