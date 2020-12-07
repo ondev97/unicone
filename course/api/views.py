@@ -119,8 +119,11 @@ def CreateModuleFile(request,pk):
     module = Module.objects.get(id=pk)
     if module.course.author.user.id == request.user.id:
         try:
+            i=0
+            names = request.FILES.getlist('file_name')
             for file in request.FILES.getlist('files'):
-                ModuleFile.objects.create(module=module, file=file)
+                ModuleFile.objects.create(module=module, file=file, file_name=names[i])
+                i+=1
             return Response({"message":"successfully uploaded"})
         except Error:
             return Response({"message": "Unable to create the bulk of files"},status=500)
