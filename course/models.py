@@ -43,7 +43,7 @@ class Module(models.Model):
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,related_name='modules')
     module_name = models.CharField(max_length=100)
-    module_content = models.CharField(max_length=100,null=True,blank=True)
+    module_content = models.TextField(null=True,blank=True)
     # file = models.FileField(null=True,upload_to=upload_location)
 
     def __str__(self):
