@@ -107,7 +107,7 @@ def CreateModule(request,pk):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
-            return Response(serializer.errors)
+            return Response(serializer.errors,status=500)
     return Response({"message":"you're not authorized"},status=403)
 
 
