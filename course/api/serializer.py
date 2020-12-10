@@ -129,4 +129,6 @@ class SubjectViewSerializer(serializers.ModelSerializer):
         model = Subject
         fields = ['id','subject_name','subject_cover','subject_type','class_type','author']
 
+        depth = 2
+
 
