@@ -23,7 +23,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id','course_name','author','course_cover','course_description','subject','created_at']
+        fields = ['id','course_name','author','course_cover','course_description','subject','created_at','price','duration']
 
     def get_author(self, obj):
         return str(obj.author.user.username)
