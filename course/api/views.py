@@ -358,16 +358,17 @@ def SubjectList(request):
 # subject list of teacher
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def TeacherSubject(request,upk):
-    teacher = TeacherProfile.objects.get(user_id=upk)
+def TeacherSubject(request):
+    teacher = TeacherProfile.objects.get(user_id=request.user.id)
     subject = Subject.objects.filter(author=teacher).order_by('-id')
+    print(subject)
     filterset = SubjectFilter(request.GET,queryset=subject)
     if filterset.is_valid():
          queryset = filterset.qs
     paginator = PageNumberPagination()
     paginator.page_size = 5
     result_page = paginator.paginate_queryset(queryset, request)
-    serializer = SubjectSerializer(result_page,many=True)
+    serializer = SubjectSerializer(result_page ,many=True)
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
     return paginator.get_paginated_response(serializer.data)
