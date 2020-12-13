@@ -153,7 +153,7 @@ def GetModules(request,pk):
 
 # update Module
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def UpdateModule(request,pk):
     module=Module.objects.get(id=pk)
