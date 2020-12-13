@@ -22,6 +22,7 @@ urlpatterns = [
     path('getsinglemodule/<int:pk>/', views.SingleModule, name='single_module'),
     path('getmodules/<int:pk>/', views.GetModules, name='read_module'),
     path('createmodulefile/<int:pk>/',views.CreateModuleFile,name='create_modulefile'),
+    path('updatemodulefile/<int:pk>/',views.UpdateModuleFile,name='update_modulefile'),
     path('deletemodulefile/<int:pk>/',views.DeleteModuleFile,name='delete_modulefile'),
     path('getmodulefiles/<int:pk>/',views.GetModuleFiles,name='read_modulefile'),
 

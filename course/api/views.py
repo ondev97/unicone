@@ -174,7 +174,14 @@ def SingleModule(request,pk):
         return Response({"message":"you're unauthorized"},status=403)
 
 
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def UpdateModuleFile(request,pk):
+    modulefile=ModuleFile.objects.get(id=pk)
+    serializer = ModuleFileSerializer(instance=modulefile,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
 
 
 # Delete Module
