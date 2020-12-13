@@ -19,6 +19,7 @@ urlpatterns = [
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
     path('deletemodule/<int:pk>/', views.DeleteModule, name='delete_module'),
     path('updatemodule/<int:pk>/', views.UpdateModule, name='update_module'),
+    path('getsinglemodule/<int:pk>/', views.SingleModule, name='single_module'),
     path('getmodules/<int:pk>/', views.GetModules, name='read_module'),
     path('createmodulefile/<int:pk>/',views.CreateModuleFile,name='create_modulefile'),
     path('deletemodulefile/<int:pk>/',views.DeleteModuleFile,name='delete_modulefile'),

@@ -163,6 +163,14 @@ def UpdateModule(request,pk):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def SingleModule(request,pk):
+    module = Module.objects.get(id=pk)
+    serializer = ModuleSerializer(module,data=request.data)
+    return Response(serializer.data)
+
+
 
 
 # Delete Module
