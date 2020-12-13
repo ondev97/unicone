@@ -167,8 +167,12 @@ def UpdateModule(request,pk):
 @permission_classes([IsAuthenticated])
 def SingleModule(request,pk):
     module = Module.objects.get(id=pk)
-    serializer = ModuleSerializer(module,data=request.data)
-    return Response(serializer.data)
+    if module.course.author.user.id == request.user.id:
+        serializer = ModuleSerializer(module)
+        return Response(serializer.data)
+    else:
+        return Response({"message":"you're unauthorized"},status=403)
+
 
 
 
