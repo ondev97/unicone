@@ -153,7 +153,7 @@ def GetModules(request,pk):
 
 # update Module
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def UpdateModule(request,pk):
     module=Module.objects.get(id=pk)
@@ -161,6 +161,8 @@ def UpdateModule(request,pk):
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
+
+
 
 
 # Delete Module
