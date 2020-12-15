@@ -5,10 +5,10 @@ from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from .serializer import UserSerializerAPI, TeacherProfileSerializer
+from .serializer import UserSerializerAPI, TeacherProfileSerializer,StudentProfileSerializer
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import TeacherProfile,User
+from ..models import TeacherProfile,User,StudentProfile
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
@@ -44,6 +44,18 @@ def TeacherProfileView(request,pk):
     serializer.data['user'].pop('password')
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def StudentProfileView(request,pk):
+    student = StudentProfile.objects.get(user_id=pk)
+    serializer = StudentProfileSerializer(student)
+    serializer.data['user'].pop('password')
+    return Response(serializer.data)
+
+
+
+
 # Update User profile of Teacher
 
 @api_view(['POST'])
@@ -57,6 +69,21 @@ def UpdateTeacherProfileView(request,pk):
         serializer.data['user'].pop('password')
         #print(serializer.data)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser,FormParser])
+def UpdateStudentProfileView(request,pk):
+    student = StudentProfile.objects.get(user_id=pk)
+    serializer = StudentProfileSerializer(instance=student,data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        serializer.data['user'].pop('password')
+        #print(serializer.data)
+    return Response(serializer.data)
+
+
 
 @api_view(['POST'])
 def TestLoginView(request):

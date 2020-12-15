@@ -62,3 +62,10 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = TeacherProfile
         depth = 1
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = "__all__"
+        model = StudentProfile
+        depth = 1
