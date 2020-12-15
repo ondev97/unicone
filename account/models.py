@@ -97,6 +97,7 @@ class StudentProfile(models.Model):
         return "student_images/%s/%s" % (instance.user.username, filename)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to=upload_location, null=True, blank=True)
+    description = models.TextField(null=True,blank=True)
 
     def __str__(self):
         return self.user.username
