@@ -41,5 +41,6 @@ urlpatterns = [
     path('teachersubject/',views.TeacherSubject,name='teacher_subject'),
     path('coursecount/',views.coursecount,name='course_count'),
     path('courses/<int:pk>/',views.CoursesIntheSubject,name='course_in_subject'),
+    path('subject_stu/<int:pk>/',views.ViewSubjectStudent,name='subject_stu'),
 
 ]

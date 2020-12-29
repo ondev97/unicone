@@ -331,6 +331,15 @@ def ViewSubject(request,pk):
     else:
         return Response({"message":"you're unauthorized"},status=403)
 
+#view subject in student side
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ViewSubjectStudent(request,pk):
+    subject = Subject.objects.get(id=pk)
+    serializer = SubjectSerializer(subject)
+    return Response(serializer.data)
+
+
 # update subject
 
 @api_view(['POST'])
