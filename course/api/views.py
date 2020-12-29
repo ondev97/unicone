@@ -28,7 +28,7 @@ from rest_framework.generics import( ListAPIView,
                                      UpdateAPIView,
                                      ListCreateAPIView)
 from rest_framework.permissions import IsAuthenticated
-from .filters import SubjectFilter
+from .filters import SubjectFilter,CourseFilter
 
 
 # Views for Unauthenticated Users
@@ -416,8 +416,18 @@ def coursecount(request):
 def CoursesIntheSubject(request,pk):
     subject = Subject.objects.get(id=pk)
     courses = Course.objects.filter(subject=subject).order_by('-id')
-    serializer = SerializerForCourse(courses, many=True)
-    return Response(serializer.data)
+    filterset = CourseFilter(request.GET, queryset=courses)
+    if filterset.is_valid():
+        queryset = filterset.qs
+    paginator = PageNumberPagination()
+    paginator.page_size = 5
+    result_page = paginator.paginate_queryset(queryset, request)
+    serializer = SerializerForCourse(result_page, many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['author']['user'].pop('password')
+    return paginator.get_paginated_response(serializer.data)
+    # serializer = SerializerForCourse(courses, many=True)
+    # return Response(serializer.data)
 
 
 

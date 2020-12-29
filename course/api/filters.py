@@ -1,6 +1,6 @@
 import django_filters
 from django.db.models import Q
-from ..models import Subject
+from ..models import Subject,Course
 
 class SubjectFilter(django_filters.FilterSet):
     search = django_filters.CharFilter(method='custom_search')
@@ -14,3 +14,14 @@ class SubjectFilter(django_filters.FilterSet):
             Q(subject_name__icontains=value)
         )
 
+class CourseFilter(django_filters.FilterSet):
+    search = django_filters.CharFilter(method='custom_search')
+
+    class Meta:
+        model = Course
+        fields = ['search']
+
+    def custom_search(self,queryset,name,value):
+        return queryset.filter(
+            Q(course_name__icontains=value)
+        )
