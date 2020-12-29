@@ -423,8 +423,6 @@ def CoursesIntheSubject(request,pk):
     paginator.page_size = 5
     result_page = paginator.paginate_queryset(queryset, request)
     serializer = SerializerForCourse(result_page, many=True)
-    for i in range(len(serializer.data)):
-        serializer.data[i]['author']['user'].pop('password')
     return paginator.get_paginated_response(serializer.data)
     # serializer = SerializerForCourse(courses, many=True)
     # return Response(serializer.data)
