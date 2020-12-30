@@ -235,7 +235,7 @@ def EnrollCourse(request,pk,upk):
 @permission_classes([IsAuthenticated])
 def MyCourses(request,upk):
     student = StudentProfile.objects.get(user_id=request.user.id)
-    courses_enrolled = Enrollment.objects.filter(student=student)
+    courses_enrolled = Enrollment.objects.filter(student=student).order_by('-id')
     serializer = MycoursesSerializer(courses_enrolled,many=True)
     return Response(serializer.data)
 
