@@ -234,7 +234,7 @@ def EnrollCourse(request,pk,upk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def MyCourses(request,upk):
-    student = StudentProfile.objects.get(user_id=upk)
+    student = StudentProfile.objects.get(user_id=request.user.id)
     courses_enrolled = Enrollment.objects.filter(student=student)
     serializer = MycoursesSerializer(courses_enrolled,many=True)
     return Response(serializer.data)

@@ -12,7 +12,7 @@ urlpatterns = [
     path('viewcourse/<int:pk>/',views.ViewEnrolledCourse.as_view(),name='view_course'),
     path('deletecourse/<int:pk>/',views.DeleteCourse,name='delete_course'),
     path('enrollcourse/<int:pk>/<int:upk>/',views.EnrollCourse,name='enroll_course'),
-    path('mycourses/<int:upk>/',views.MyCourses,name='mycourses'),
+    path('mycourses/',views.MyCourses,name='mycourses'),
     path('mycoursesteacher/<int:upk>/',views.TeacherCourses,name='mycoursesteacher'),
 
     # Urls for modules
