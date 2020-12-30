@@ -114,7 +114,7 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id','course_cover','course_description','author','modules']
+        fields = "__all__"
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
