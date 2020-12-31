@@ -14,6 +14,8 @@ urlpatterns = [
     path('enrollcourse/<int:pk>/<int:upk>/',views.EnrollCourse,name='enroll_course'),
     path('mycourses/',views.MyCourses,name='mycourses'),
     path('mycoursesteacher/<int:upk>/',views.TeacherCourses,name='mycoursesteacher'),
+    path('students/<int:pk>/',views.Students,name='students_in_courses'),
+    path('studentscount/',views.StudentsCountTeacher,name='students_count'),
 
     # Urls for modules
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),
@@ -39,8 +41,13 @@ urlpatterns = [
     path('subjectlist/',views.SubjectList,name='list_subject'),
     path('subject/<int:pk>/',views.ViewSubject,name='view_subject'),
     path('teachersubject/',views.TeacherSubject,name='teacher_subject'),
-    path('coursecount/',views.coursecount,name='course_count'),
     path('courses/<int:pk>/',views.CoursesIntheSubject,name='course_in_subject'),
     path('subject_stu/<int:pk>/',views.ViewSubjectStudent,name='subject_stu'),
+    path('mysubjects_stu/',views.MySubjects,name='my_subjects_stu'),
 
+    # Urls for counting
+
+    path('coursecount/',views.coursecount,name='course_count'),
+    path('studentcount/',views.studentcount,name='student_count'),
+    path('teachercount/',views.teachercount,name='teacher_count'),
 ]

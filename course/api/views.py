@@ -10,6 +10,7 @@ from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFil
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
+from account.api.serializer import StudentProfileSerializer
 from course.api.serializer import (CourseSerializer,
                                    CourseDetailSerializer,
                                    CourseCreateSerializer,
@@ -240,6 +241,46 @@ def MyCourses(request):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def MySubjects(request):
+    student = StudentProfile.objects.get(user_id=request.user.id)
+    courses_enrolled = Enrollment.objects.filter(student=student).order_by('-id')
+    subjects = []
+    for c in courses_enrolled:
+        if c.course.subject not in subjects:
+            subjects.append(c.course.subject)
+    serializer = SubjectSerializer(subjects,many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['author']['user'].pop('password')
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def Students(request,pk):
+    course = Course.objects.get(id=pk)
+    courses_enrolled = Enrollment.objects.filter(course=course).order_by('-id')
+    students = []
+    for c in courses_enrolled:
+        if c.student not in students:
+            students.append(c.student)
+    serializer = StudentProfileSerializer(students,many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['user'].pop('password')
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def StudentsCountTeacher(request):
+    teacher = TeacherProfile.objects.get(user_id=request.user.id)
+    courses_enrolled = Enrollment.objects.filter(course__author=teacher).order_by('-id')
+    students = []
+    for c in courses_enrolled:
+        if c.student not in students:
+            students.append(c.student)
+    return Response({'student_count': len(students)}, status=200)
+
 
 # accessing enrolled courses
 class ViewEnrolledCourse(RetrieveAPIView):
@@ -407,7 +448,20 @@ def TeacherSubject(request):
 def coursecount(request):
     courses = Course.objects.count()
     print(request.user)
-    return Response(courses)
+    return Response({'count':courses})
+
+@api_view(['GET'])
+def studentcount(request):
+    students = StudentProfile.objects.count()
+    print(request.user)
+    return Response({'count':students})
+
+@api_view(['GET'])
+def teachercount(request):
+    teachers = TeacherProfile.objects.count()
+    print(request.user)
+    return Response({'count':teachers})
+
 
 # courses inside a subject
 
