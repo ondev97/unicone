@@ -223,11 +223,11 @@ def EnrollCourse(request,pk,upk):
                                 couponSerializer.save(isValid=False)
                                 serializer.data['student']['user'].pop('password')
                             return Response(serializer.data)
-                        return Response(serializer.errors)
-                    return Response({"message":"You have already enrolled this course..."})
-                return Response({"message":"Coupon is not valid"})
+                        return Response(serializer.errors,status=403)
+                    return Response({"message":"You have already enrolled this course..."},status=403)
+                return Response({"message":"Coupon is not valid"},status=403)
 
-    return Response("coupon is not found")
+    return Response("coupon is not found",status=404)
 
 
 
