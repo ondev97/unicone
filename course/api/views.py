@@ -227,7 +227,7 @@ def EnrollCourse(request,pk,upk):
                     return Response({"message":"You have already enrolled this course..."},status=403)
                 return Response({"message":"Coupon is not valid"},status=403)
 
-    return Response("coupon is not found",status=404)
+    return Response({"message":"coupon is not found"},status=404)
 
 
 
