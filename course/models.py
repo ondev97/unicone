@@ -81,3 +81,12 @@ class Coupon(models.Model):
     def __str__(self):
         return self.coupon_key+"  issued: "+ str(self.isIssued)
 
+
+class Payment(models.Model):
+    student = models.ForeignKey(StudentProfile,on_delete=models.CASCADE,null=True,blank=True)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE,null=True,blank=True)
+    amount = models.FloatField(default=0)
+    date = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return self.amount

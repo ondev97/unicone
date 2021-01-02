@@ -6,7 +6,7 @@ from aifc import Error
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile
+from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Payment
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
@@ -533,3 +533,12 @@ def MyCoursesInTheSubject(request,pk):
     result_page = paginator.paginate_queryset(queryset, request)
     serializer = EnrolledCourseSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def SavePayments(request):
+    student = StudentProfile.objects.get(user=request.user)
+    course = Course.objects.get(id=request.data['order_id'])
+    amount = request.data['amount']
+    p = Payment.objects.create(student=student, course=course, amount=amount)
+    return Response({"message":"Saved successfully"})
