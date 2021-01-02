@@ -229,6 +229,32 @@ def EnrollCourse(request,pk,upk):
 
     return Response({"message":"coupon is not found"},status=404)
 
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def EnrollCourseByPayment(request,pk,upk):
+    course = Course.objects.get(id=pk)
+    student = StudentProfile.objects.get(user_id=upk)
+    print("before before")
+    enrollment = Enrollment.objects.filter(student=student, course=course).first()
+    print("before running")
+    if not enrollment:
+        print("running")
+        c = Coupon.objects.create(course=course, coupon_key="", isValid=False, isIssued=True)
+        print(c.id)
+        serializer = CouponSerializer(instance=c, data=request.data)
+        if serializer.is_valid():
+            coupon = str(c.id) + ":" + str(c.course.id)
+            coupon_key = hashlib.shake_256(coupon.encode()).hexdigest(5)
+            serializer.save(coupon_key=coupon_key)
+            enroll = Enrollment(course=course, student=student, enroll_key=coupon_key, is_payment=True)
+            enroll_serializer = CourseEnrollSerializer(enroll, data=request.data)
+            if enroll_serializer.is_valid():
+                enroll_serializer.save()
+                return Response(enroll_serializer.data)
+            return Response(enroll_serializer.errors)
+        return Response(serializer.errors)
+    else:
+        return Response({'message':'You have already enrolled'}, status=403)
 
 
 # Listing Enrolled Courses

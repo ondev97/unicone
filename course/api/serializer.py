@@ -62,7 +62,7 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = "__all__"
-        depth =2
+        # depth =2
 
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,7 +110,7 @@ class CourseCreateSerializer(serializers.ModelSerializer):
     #     return instance
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
-    modules=ModuleSerializer(many=True)
+    #modules=ModuleSerializer(many=True)
 
     class Meta:
         model = Course

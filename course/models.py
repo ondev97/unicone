@@ -64,6 +64,7 @@ class Enrollment(models.Model):
     enroll_key = models.CharField(max_length=100,default="Text here",null=True)
     course = models.ForeignKey(Course,on_delete=models.CASCADE,null=True,related_name='enrollment')
     student = models.ForeignKey(StudentProfile,on_delete=models.CASCADE,null=True)
+    is_payment = models.BooleanField(default=False)
 
     def __str__(self):
         return self.course.course_name
