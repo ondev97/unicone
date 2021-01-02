@@ -31,6 +31,7 @@ class Course(models.Model):
     created_at = models.DateTimeField(default=now)
     price = models.IntegerField(default=0,null=True,blank=True)
     duration = models.CharField(max_length=20, null=True, blank=True)
+    is_enrolled = models.BooleanField(default=False)
 
 
     def __str__(self):

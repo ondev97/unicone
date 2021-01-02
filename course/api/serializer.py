@@ -37,7 +37,7 @@ class SerializerForCourse(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ["id","course_name","course_description","course_cover","created_at","price","duration","author"]
+        fields = ["id","course_name","course_description","course_cover","created_at","price","duration","author", "is_enrolled"]
         depth = 2
 
     def get_author(self, obj):
