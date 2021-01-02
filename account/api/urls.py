@@ -18,5 +18,6 @@ urlpatterns = [
     path('updateuser/<int:pk>/',UpdateUser.as_view(),name='update_user'),
     path('stuprofile/<int:pk>/',StudentProfileView,name='view_stuprofile'),
     path('updatestudent/<int:pk>/',UpdateStudentProfileView,name='update_student'),
+    path('testlogin/',TestLoginView,name='test_login'),
 
 ]
