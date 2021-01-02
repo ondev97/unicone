@@ -89,4 +89,4 @@ class Payment(models.Model):
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
