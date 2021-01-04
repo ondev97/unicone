@@ -2,7 +2,7 @@ import hashlib
 from cryptography.fernet import Fernet
 from datetime import datetime
 from aifc import Error
-
+from account.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
@@ -147,6 +147,11 @@ def GetModuleFiles(request,pk):
 @permission_classes([IsAuthenticated])
 def GetModules(request,pk):
     course = Course.objects.get(id=pk)
+    user = User.objects.get(id=request.user.id)
+    if user.is_teacher == False:
+        e = Enrollment.objects.filter(course=course, student__user=user)
+        if not e:
+            return Response({"message":"You have not enrolled for this course"}, status=403)
     module = Module.objects.filter(course=course)
     serializer = ModuleSerializer(module, many=True)
     return Response(serializer.data)
@@ -542,3 +547,4 @@ def SavePayments(request):
     amount = request.data['amount']
     p = Payment.objects.create(student=student, course=course, amount=amount)
     return Response({"message":"Saved successfully"})
+
