@@ -1,4 +1,5 @@
 from django.urls import path,include
+from django.contrib.auth import views as auth_views
 from account.api.views import ( createuser,
                                 TeacherProfileView,
                                 UpdateTeacherProfileView,
@@ -20,4 +21,10 @@ urlpatterns = [
     path('updatestudent/<int:pk>/',UpdateStudentProfileView,name='update_student'),
     path('testlogin/',TestLoginView,name='test_login'),
 
+    #password reset views
+
+    path('reset_password/',auth_views.PasswordResetView.as_view(),name='reset_password'),
+    path('password_sent/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 ]
