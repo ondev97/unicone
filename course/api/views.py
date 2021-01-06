@@ -211,8 +211,6 @@ def EnrollCourse(request,pk,upk):
     student = StudentProfile.objects.get(user_id=upk)
     couponList = Coupon.objects.filter(course=course)
     for c in couponList:
-        # coupon = str(c.id)+":"+str(c.course.id)
-        # couponHash = hashlib.shake_256(coupon.encode()).hexdigest(5)
         if str(request.data['coupon_key'])==str(c.coupon_key):
             enroll = Enrollment(course=course,student=student, enroll_key=request.data['coupon_key'])
             condition = c.isValid==True and c.isIssued==True
@@ -226,7 +224,6 @@ def EnrollCourse(request,pk,upk):
                             couponSerializer = CouponSerializer(instance=c, data=request.data)
                             if couponSerializer.is_valid():
                                 couponSerializer.save(isValid=False)
-                                serializer.data['student']['user'].pop('password')
                             return Response(serializer.data)
                         return Response(serializer.errors,status=403)
                     return Response({"message":"You have already enrolled this course..."},status=403)
