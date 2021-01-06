@@ -87,14 +87,14 @@ def UpdateStudentProfileView(request,pk):
 
 @api_view(['POST'])
 def TestLoginView(request):
-    user = User.objects.get(email=request.data['username'])
-    token = None
-    try:
-        token = Token.objects.get(user=user)
-    except:
-        pass
+    user = User.objects.filter(email=request.data['username']).first()
     status = False
-    if token!=None:
+    if not user:
+        return Response({
+            "status": status
+        })
+    token = Token.objects.filter(user=user).first()
+    if token:
         status = True
     return Response({
         "status" : status
