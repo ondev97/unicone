@@ -41,14 +41,14 @@ urlpatterns = [
     path('createsubject/<int:pk>/',views.CreateSubject,name='create_subject'),
     path('updatesubject/<int:pk>/',views.UpdateSubject,name='update_subject'),
     path('deletesubject/<int:pk>/',views.DeleteSubject,name='delete_subject'),
-    path('subjectlist/',views.SubjectList,name='list_subject'),
+    path('subjectlist/', views.SubjectListIndex, name='list_subject'),
     path('subject/<int:pk>/',views.ViewSubject,name='view_subject'),
     path('teachersubject/',views.TeacherSubject,name='teacher_subject'),
     path('courses/<int:pk>/',views.CoursesIntheSubject,name='course_in_subject'),
     path('subject_stu/<int:pk>/',views.ViewSubjectStudent,name='subject_stu'),
     path('mysubjects_stu/',views.MySubjects,name='my_subjects_stu'),
     path('latestsub/',views.LatestSubjects,name='latest_subjects'),
-    path('indexsub/',views.SubjectList,name='index_subjects'),
+    path('indexsub/', views.SubjectListIndex, name='index_subjects'),
 
     # Urls for counting
 

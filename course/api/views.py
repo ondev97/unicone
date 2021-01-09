@@ -568,7 +568,7 @@ def LatestSubjects(request):
 # Subjects for index page
 
 @api_view(['GET'])
-def SubjectList(request):
+def SubjectListIndex(request):
     subjects = Subject.objects.all()
     serializer = SubjectSerializer(subjects, many=True)
     for i in range(len(serializer.data)):
