@@ -307,8 +307,8 @@ def DashboardDetails(request):
     for c in courses_enrolled:
         if c.student not in students:
             students.append(c.student)
-    subjects = len(Subject.objects.filter(author__user=request.user))
-    courses = len(Course.objects.filter(author__user=request.user))
+    subjects = Subject.objects.filter(author__user=request.user).count()
+    courses = Course.objects.filter(author__user=request.user).count()
     details = {
         'student_count': len(students),
         'subject-count' : subjects,
