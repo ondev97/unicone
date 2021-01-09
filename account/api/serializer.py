@@ -69,3 +69,4 @@ class StudentProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = StudentProfile
         depth = 1
+

@@ -128,3 +128,11 @@ class UpdateUser(RetrieveUpdateAPIView):
             print("not matched")
             raise APIException("Password's not matching")
 
+
+@api_view(['GET'])
+def Allteachers(request):
+    teachers = TeacherProfile.objects.all()
+    serializer = TeacherProfileSerializer(teachers,many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['user'].pop('password')
+    return Response(serializer.data)

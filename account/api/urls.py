@@ -7,7 +7,8 @@ from account.api.views import ( createuser,
                                 TestLoginView,
                                 UpdateUser,
                                 StudentProfileView,
-                                UpdateStudentProfileView)
+                                UpdateStudentProfileView,
+                                Allteachers)
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -27,4 +28,9 @@ urlpatterns = [
     path('password_sent/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
     path('reset_password_complete/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
+
+
+    #index page views
+
+    path('teachers/',Allteachers,name="all_teachers")
 ]
