@@ -545,3 +545,16 @@ def SavePayments(request):
     p = Payment.objects.create(student=student, course=course, amount=amount)
     return Response({"message":"Saved successfully"})
 
+@api_view(['GET'])
+def statistics(request):
+    student_count = StudentProfile.objects.count()
+    teacher_count = TeacherProfile.objects.count()
+    subject_count = Subject.objects.count()
+    course_count = Course.objects.count()
+    counts = {
+        "students" : student_count,
+        "teachers" : teacher_count,
+        "subjects" : subject_count,
+        "courses" : course_count
+    }
+    return Response(counts, 200)

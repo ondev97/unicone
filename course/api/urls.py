@@ -53,4 +53,5 @@ urlpatterns = [
     path('coursecount/',views.coursecount,name='course_count'),
     path('studentcount/',views.studentcount,name='student_count'),
     path('teachercount/',views.teachercount,name='teacher_count'),
+    path('stat/',views.statistics,name='stat'),
 ]
