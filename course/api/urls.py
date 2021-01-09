@@ -15,7 +15,7 @@ urlpatterns = [
     path('mycourses/',views.MyCourses,name='mycourses'),
     path('mycoursesteacher/<int:upk>/',views.TeacherCourses,name='mycoursesteacher'),
     path('students/<int:pk>/',views.Students,name='students_in_courses'),
-    path('studentscount/',views.StudentsCountTeacher,name='students_count'),
+    path('dashboard/', views.DashboardDetails, name='students_count'),
     path('enrolledcoursesinsubject/<int:pk>/',views.MyCoursesInTheSubject,name='enrolled_courses_subject'),
     path('enrollbypayment/<int:pk>/<int:upk>/',views.EnrollCourseByPayment,name='coupon_by_payment'),
     path('enrolledpayment/',views.SavePayments,name='save_payments'),
@@ -47,11 +47,12 @@ urlpatterns = [
     path('courses/<int:pk>/',views.CoursesIntheSubject,name='course_in_subject'),
     path('subject_stu/<int:pk>/',views.ViewSubjectStudent,name='subject_stu'),
     path('mysubjects_stu/',views.MySubjects,name='my_subjects_stu'),
+    path('latestsub/',views.LatestSubjects,name='latest_subjects'),
 
     # Urls for counting
 
     path('coursecount/',views.coursecount,name='course_count'),
     path('studentcount/',views.studentcount,name='student_count'),
     path('teachercount/',views.teachercount,name='teacher_count'),
-    path('stat/',views.statistics,name='stat'),
+    path('stat/', views.Statistics, name='stat'),
 ]

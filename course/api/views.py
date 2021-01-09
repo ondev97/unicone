@@ -300,14 +300,21 @@ def Students(request,pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def StudentsCountTeacher(request):
+def DashboardDetails(request):
     teacher = TeacherProfile.objects.get(user_id=request.user.id)
     courses_enrolled = Enrollment.objects.filter(course__author=teacher).order_by('-id')
     students = []
     for c in courses_enrolled:
         if c.student not in students:
             students.append(c.student)
-    return Response({'student_count': len(students)}, status=200)
+    subjects = len(Subject.objects.filter(author__user=request.user))
+    courses = len(Course.objects.filter(author__user=request.user))
+    details = {
+        'student_count': len(students),
+        'subject-count' : subjects,
+        'course-count' : courses
+    }
+    return Response(details, status=200)
 
 
 # accessing enrolled courses
@@ -429,15 +436,6 @@ def DeleteSubject(request,pk):
     subject.delete()
     return Response("Subject Successfully Deleted")
 
-# subject list
-# @api_view(['GET'])
-# def SubjectList(request):
-#     paginator = PageNumberPagination()
-#     paginator.page_size=5
-#     subjects =SubjectFilter ( request.GET, queryset= Subject.objects.all())
-#     result_page = paginator.paginate_queryset(subjects.queryset,request)
-#     serializer = SubjectViewSerializer(result_page,many=True)
-#     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -546,7 +544,7 @@ def SavePayments(request):
     return Response({"message":"Saved successfully"})
 
 @api_view(['GET'])
-def statistics(request):
+def Statistics(request):
     student_count = StudentProfile.objects.count()
     teacher_count = TeacherProfile.objects.count()
     subject_count = Subject.objects.count()
@@ -558,3 +556,12 @@ def statistics(request):
         "courses" : course_count
     }
     return Response(counts, 200)
+
+@api_view(['GET'])
+def LatestSubjects(request):
+    subjects = Subject.objects.order_by("created_at")[:5]
+    serializer = SubjectSerializer(subjects,many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['author']['user'].pop('password')
+    return Response(serializer.data)
+
