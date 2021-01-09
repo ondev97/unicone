@@ -232,7 +232,7 @@ def EnrollCourse(request,pk,upk):
     return Response({"message":"coupon is not found"},status=404)
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def EnrollCourseByPayment(request,pk,upk):
     course = Course.objects.get(id=pk)
     student = StudentProfile.objects.get(user_id=upk)
@@ -565,3 +565,12 @@ def LatestSubjects(request):
         serializer.data[i]['author']['user'].pop('password')
     return Response(serializer.data)
 
+# Subjects for index page
+
+@api_view(['GET'])
+def SubjectList(request):
+    subjects = Subject.objects.all()
+    serializer = SubjectSerializer(subjects, many=True)
+    for i in range(len(serializer.data)):
+        serializer.data[i]['author']['user'].pop('password')
+    return Response(serializer.data)
