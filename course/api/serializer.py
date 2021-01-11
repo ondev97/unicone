@@ -73,7 +73,7 @@ class MycoursesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Enrollment
-        fields = ['id','course','enroll_key','student']
+        fields = ['id','course','enroll_key','student','is_payment']
         depth = 1
 
 
