@@ -36,5 +36,5 @@ class EnrollCourseFilter(django_filters.FilterSet):
 
     def custom_search(self,queryset,name,value):
         return queryset.filter(
-            Q(course__course_name = value)
+            Q(course__course_name__icontains = value)
         )
