@@ -29,7 +29,7 @@ from rest_framework.generics import( ListAPIView,
                                      UpdateAPIView,
                                      ListCreateAPIView)
 from rest_framework.permissions import IsAuthenticated
-from .filters import SubjectFilter,CourseFilter
+from .filters import SubjectFilter,CourseFilter,EnrollCourseFilter
 
 
 # Views for Unauthenticated Users
@@ -265,8 +265,24 @@ def EnrollCourseByPayment(request,pk,upk):
 def MyCourses(request):
     student = StudentProfile.objects.get(user_id=request.user.id)
     courses_enrolled = Enrollment.objects.filter(student=student).order_by('-id')
-    serializer = MycoursesSerializer(courses_enrolled,many=True)
-    return Response(serializer.data)
+    filterset = EnrollCourseFilter(request.GET, queryset=courses_enrolled)
+    if filterset.is_valid():
+        queryset = filterset.qs
+        paginator = PageNumberPagination()
+        paginator.page_size=5
+        result_page = paginator.paginate_queryset(queryset,request)
+        serializer = MycoursesSerializer(result_page,many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+  # filterset = SubjectFilter(request.GET, queryset=subjects)
+  #   if filterset.is_valid():
+  #        queryset = filterset.qs
+  #   paginator = PageNumberPagination()
+  #   paginator.page_size=5
+  #   result_page = paginator.paginate_queryset(queryset, request)
+  #   serializer = SubjectViewSerializer(result_page, many=True)
+  #   return paginator.get_paginated_response(serializer.data)
+
 
 
 @api_view(['GET'])
