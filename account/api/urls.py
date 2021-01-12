@@ -8,7 +8,7 @@ from account.api.views import ( createuser,
                                 UpdateUser,
                                 StudentProfileView,
                                 UpdateStudentProfileView,
-                                Allteachers)
+                                Allteachers,ContactForm)
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -32,5 +32,9 @@ urlpatterns = [
 
     #index page views
 
-    path('teachers/',Allteachers,name="all_teachers")
+    path('teachers/',Allteachers,name="all_teachers"),
+
+    # contact form
+
+    path('contact/',ContactForm,name="contact")
 ]

@@ -11,6 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from ..models import TeacherProfile,User,StudentProfile
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 
@@ -136,3 +138,31 @@ def Allteachers(request):
     for i in range(len(serializer.data)):
         serializer.data[i]['user'].pop('password')
     return Response(serializer.data)
+
+
+# class ContactForm(APIView):
+#     def post(self, request, *args, **kwargs):
+#          serailizer_class = ContactForm(data=request.data)
+#          if serailizer_class.is_valid():
+#              data = serailizer_class.validated_data
+#              email_from = data.get('email')
+#              subject = data.get('subject')
+#              message = data.get('message')
+#              send_mail(subject, message, email_from,['navanjane@zohomail.com'],)
+#
+#          return Response({"success": "Sent"})
+#          return Response({'success': "Failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def ContactForm(request):
+    message = request.data['message']
+    name = request.data['name']
+    subject = request.data['subject']
+    phone_no = request.data['phone_number']
+    email_from = request.data['email']
+
+
+    message = 'From : ' + email_from + '\nName : ' + name + '\nPhone No. : ' + phone_no + '\n\n' + message
+    email_to = ['nkindelpitiya@gmail.com']
+    send_mail(subject, message, settings.EMAIL_HOST_USER, email_to, fail_silently=False)
+    return Response({"message":"Email was sent successfully"}, status=200)

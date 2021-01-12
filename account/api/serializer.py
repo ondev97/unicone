@@ -70,3 +70,4 @@ class StudentProfileSerializer(serializers.ModelSerializer):
         model = StudentProfile
         depth = 1
 
+
