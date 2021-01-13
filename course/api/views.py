@@ -585,7 +585,7 @@ def LatestSubjects(request):
 
 @api_view(['GET'])
 def SubjectListIndex(request):
-    subjects = Subject.objects.all()
+    subjects = Subject.objects.all().order_by('-id')[:5]
     serializer = SubjectSerializer(subjects, many=True)
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
