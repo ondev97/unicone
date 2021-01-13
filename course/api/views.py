@@ -599,10 +599,10 @@ def TeacherStat(request):
     students =[]
     enrollments = Enrollment.objects.filter(course__author__user=request.user)
     for e in enrollments:
-        if e.studet not in students:
-            students.append(e.studet)
+        if e.student not in students:
+            students.append(e.student)
     data = {
-        'students'  :   students,
+        'students'  :   len(students),
         'courses'   :   courses,
         'subjects'  :   subjects
     }
