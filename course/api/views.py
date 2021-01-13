@@ -606,4 +606,4 @@ def TeacherStat(request):
         'courses'   :   courses,
         'subjects'  :   subjects
     }
-    return Response(subjects, status=200)
+    return Response(data, status=200)
