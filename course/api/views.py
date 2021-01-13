@@ -590,3 +590,20 @@ def SubjectListIndex(request):
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
     return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def TeacherStat(request):
+    subjects = Subject.objects.filter(author__user=request.user).count()
+    courses = Course.objects.filter(author__user=request.user).count()
+    students =[]
+    enrollments = Enrollment.objects.filter(course__author__user=request.user)
+    for e in enrollments:
+        if e.studet not in students:
+            students.append(e.studet)
+    data = {
+        'students'  :   students,
+        'courses'   :   courses,
+        'subjects'  :   subjects
+    }
+    return Response(subjects, status=200)
