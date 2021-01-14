@@ -77,7 +77,7 @@ class TeacherProfile(models.Model):
     def upload_location(instance, filename):
         return "teacher_images/%s/%s" % (instance.user.username, filename)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to=upload_location,null=True,blank=True,default="upload_images/default.png")
+    profile_pic = models.ImageField(upload_to=upload_location,null=True,blank=True,default="teacher_images/default.png")
     description = models.CharField(max_length=500,null=True,blank=True)
     education1 = models.CharField(max_length=255,null=True,blank=True)
     education2 = models.CharField(max_length=255,null=True,blank=True)
@@ -96,7 +96,7 @@ class StudentProfile(models.Model):
     def upload_location(instance, filename):
         return "student_images/%s/%s" % (instance.user.username, filename)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to=upload_location, null=True, blank=True)
+    profile_pic = models.ImageField(upload_to=upload_location, null=True, blank=True,default='student_images/default.png')
     description = models.TextField(null=True,blank=True)
 
     def __str__(self):
