@@ -586,10 +586,13 @@ def LatestSubjects(request):
 @api_view(['GET'])
 def SubjectListIndex(request):
     subjects = Subject.objects.all()
-    serializer = SubjectSerializer(subjects, many=True)
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
+    result_page = paginator.paginate_queryset(subjects, request)
+    serializer = SubjectSerializer(result_page, many=True)
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
-    return Response(serializer.data)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
