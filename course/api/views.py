@@ -575,7 +575,7 @@ def Statistics(request):
 
 @api_view(['GET'])
 def LatestSubjects(request):
-    subjects = Subject.objects.order_by("created_at")[:3]
+    subjects = Subject.objects.order_by("-id")[:3]
     serializer = SubjectSerializer(subjects,many=True)
     for i in range(len(serializer.data)):
         serializer.data[i]['author']['user'].pop('password')
