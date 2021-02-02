@@ -536,19 +536,27 @@ def MyCoursesInTheSubject(request,pk):
     subject = Subject.objects.get(id=pk)
     student = StudentProfile.objects.get(user=request.user)
     enrollments = Enrollment.objects.filter(student=student, course__subject=subject)
-    courseids = []
-    for e in enrollments:
-        if e.course.id not in courseids:
-            courseids.append(e.course.id)
-    courses = Course.objects.filter(id__in=courseids)
-    filterset = CourseFilter(request.GET,queryset=courses)
+    # courseids = []
+    # for e in enrollments:
+    #     if e.course.id not in courseids:
+    #         courseids.append(e.course.id)
+    # courses = Course.objects.filter(id__in=courseids)
+    # filterset = CourseFilter(request.GET,queryset=courses)
+    # if filterset.is_valid():
+    #     queryset = filterset.qs
+    # paginator = PageNumberPagination()
+    # paginator.page_size = 10
+    # result_page = paginator.paginate_queryset(queryset, request)
+    # serializer = EnrolledCourseSerializer(result_page, many=True)
+    # return paginator.get_paginated_response(serializer.data)
+    filterset = EnrollCourseFilter(request.GET, queryset=enrollments)
     if filterset.is_valid():
         queryset = filterset.qs
-    paginator = PageNumberPagination()
-    paginator.page_size = 10
-    result_page = paginator.paginate_queryset(queryset, request)
-    serializer = EnrolledCourseSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = MycoursesSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
