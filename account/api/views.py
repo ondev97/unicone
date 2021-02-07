@@ -134,7 +134,7 @@ class UpdateUser(RetrieveUpdateAPIView):
 @api_view(['GET'])
 def Allteachers(request):
     teachers = TeacherProfile.objects.all()
-    teachers_list = sorted(teachers, key=lambda x: x.user.first_name, reverse=True)
+    teachers_list = sorted(teachers, key=lambda x: x.user.first_name, reverse=False)
     serializer = TeacherProfileSerializer(teachers_list,many=True)
     for i in range(len(serializer.data)):
         serializer.data[i]['user'].pop('password')
