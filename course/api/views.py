@@ -152,7 +152,7 @@ def GetModules(request,pk):
         e = Enrollment.objects.filter(course=course, student__user=user)
         if not e:
             return Response({"message":"You have not enrolled for this course"}, status=403)
-    module = Module.objects.filter(course=course)
+    module = Module.objects.filter(course=course).order_by('id')
     serializer = ModuleSerializer(module, many=True)
     return Response(serializer.data)
 
