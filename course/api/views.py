@@ -471,6 +471,7 @@ def SubjectList(request):
 
 
 # subject list of teacher
+@cache_page(60)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def TeacherSubject(request):
