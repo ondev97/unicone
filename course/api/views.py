@@ -415,6 +415,7 @@ def CreateSubject(request,pk):
     return Response(serializer.data)
 
 # view subject
+@cache_page(60)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def ViewSubject(request,pk):
