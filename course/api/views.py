@@ -510,7 +510,7 @@ def teachercount(request):
 
 
 # courses inside a subject
-
+@cache_page(60)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def CoursesIntheSubject(request,pk):
