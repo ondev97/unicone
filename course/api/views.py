@@ -30,6 +30,8 @@ from rest_framework.generics import( ListAPIView,
                                      ListCreateAPIView)
 from rest_framework.permissions import IsAuthenticated
 from .filters import SubjectFilter,CourseFilter,EnrollCourseFilter
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 # Views for Unauthenticated Users
@@ -581,7 +583,9 @@ def Statistics(request):
     }
     return Response(counts, 200)
 
+
 @api_view(['GET'])
+@method_decorator(cache_page(60))
 def LatestSubjects(request):
     subjects = Subject.objects.order_by("-id")[:3]
     serializer = SubjectSerializer(subjects,many=True)
