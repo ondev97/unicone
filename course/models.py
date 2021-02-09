@@ -1,6 +1,9 @@
 from django.db import models
 from account.models import TeacherProfile,StudentProfile
 from django.utils.timezone import now
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.cache import cache
 
 class Subject(models.Model):
     def upload_location(instance, filename):
@@ -17,6 +20,9 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.subject_name
+@receiver(post_save, sender=Subject)
+def clear_cache(sender,instance,**kwargs):
+    cache.clear()
 
 
 class Course(models.Model):
@@ -36,6 +42,10 @@ class Course(models.Model):
 
     def __str__(self):
         return self.course_name
+
+@receiver(post_save, sender=Course)
+def clear_cache(sender,instance,**kwargs):
+    cache.clear()
 
 
 class Module(models.Model):
