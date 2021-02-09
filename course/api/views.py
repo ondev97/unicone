@@ -415,7 +415,7 @@ def CreateSubject(request,pk):
     return Response(serializer.data)
 
 # view subject
-@cache_page(60)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def ViewSubject(request,pk):
@@ -472,7 +472,7 @@ def SubjectList(request):
 
 
 # subject list of teacher
-@cache_page(60)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def TeacherSubject(request):
@@ -510,7 +510,7 @@ def teachercount(request):
 
 
 # courses inside a subject
-@cache_page(60)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def CoursesIntheSubject(request,pk):
@@ -587,7 +587,7 @@ def Statistics(request):
 
 
 @api_view(['GET'])
-@cache_page(60)
+@cache_page(60*60)
 def LatestSubjects(request):
     subjects = Subject.objects.order_by("-id")[:3]
     serializer = SubjectSerializer(subjects,many=True)
