@@ -1,9 +1,7 @@
 from django.db import models
 from account.models import TeacherProfile,StudentProfile
 from django.utils.timezone import now
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.core.cache import cache
+from .compress import compress
 
 class Subject(models.Model):
     def upload_location(instance, filename):
@@ -18,10 +16,13 @@ class Subject(models.Model):
     short_description = models.CharField(max_length=300,blank=True,null=True)
     created_at = models.DateTimeField(default=now)
 
+    def save(self, *args, **kwargs):
+        new_image = compress(self.subject_cover)
+        self.subject_cover = new_image
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.subject_name
-
-
 
 class Course(models.Model):
     def upload_location(instance,filename):
@@ -37,10 +38,14 @@ class Course(models.Model):
     duration = models.CharField(max_length=20, null=True, blank=True)
     is_enrolled = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        new_image = compress(self.course_cover)
+        self.course_cover = new_image
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.course_name
-
 
 
 
