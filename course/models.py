@@ -26,7 +26,7 @@ class Subject(models.Model):
 
 class Course(models.Model):
     def upload_location(instance,filename):
-        return "course_images/%s/%s"%(instance.id,filename)
+        return "course_images/%s/%s"%(str(instance.id),filename)
 
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE,null=True,default=None)
     course_name = models.CharField(max_length=300,default=None)
