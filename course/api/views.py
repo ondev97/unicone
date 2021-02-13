@@ -2,6 +2,8 @@ import hashlib
 from cryptography.fernet import Fernet
 from datetime import datetime
 from aifc import Error
+
+from account.api.filters import StudentFilter
 from account.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -307,14 +309,22 @@ def MySubjects(request):
 def Students(request,pk):
     course = Course.objects.get(id=pk)
     courses_enrolled = Enrollment.objects.filter(course=course).order_by('-id')
-    students = []
+    student_ids = []
     for c in courses_enrolled:
-        if c.student not in students:
-            students.append(c.student)
-    serializer = StudentProfileSerializer(students,many=True)
-    for i in range(len(serializer.data)):
-        serializer.data[i]['user'].pop('password')
-    return Response(serializer.data)
+        if c.student.id not in student_ids:
+            student_ids.append(c.student.id)
+    students = StudentProfile.objects.filter(id__in=student_ids)
+    filterset = StudentFilter(request.GET, queryset=students)
+    if filterset.is_valid():
+        queryset = filterset.qs
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = StudentProfileSerializer(result_page,many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['user'].pop('password')
+        return paginator.get_paginated_response(serializer.data)
+    return Response({"message": "not found"}, status=404)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -624,3 +634,70 @@ def TeacherStat(request):
         'subjects'  :   subjects
     }
     return Response(data, status=200)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Unenroll(request, sid, cid):
+    student = StudentProfile.objects.get(id=sid)
+    course = Course.objects.get(id=cid)
+    enrollment = Enrollment.objects.filter(course=course, student=student).first()
+    if enrollment:
+        enrollment.delete()
+        return Response({'message' : 'Unenrolled successfully'}, status=200)
+    else:
+        return Response({'message': 'Enrollment not found'}, status=404)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def EnrollCourseByTeacher(request,pk):
+    course = Course.objects.get(id=pk)
+    res = []
+    for id in request.data['students']:
+        student = StudentProfile.objects.get(user_id=id)
+        e = Enrollment.objects.filter(course=course, student=student).first()
+        if not e:
+            enroll = Enrollment(course=course, student=student, enroll_key="Enrolled by teacher")
+            serializer = CourseEnrollSerializer(enroll, data= request.data)
+            if serializer.is_valid():
+                serializer.save()
+                res.append({
+                    "username" : student.user.username,
+                    "email" : student.user.email,
+                    "status" : "enrolled successfully"
+                })
+            else:
+                res.append({
+                    "username": student.user.username,
+                    "email": student.user.email,
+                    "status": "something is wrong"
+                })
+        else:
+            res.append({
+                "username": student.user.username,
+                "email": student.user.email,
+                "status": "already enrolled for this course"
+            })
+    return Response(res, status=200)
+
+
+#free enroll
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def FreeEnroll(request,cid,sid):
+    course = Course.objects.get(id=cid)
+    student = StudentProfile.objects.get(user_id=sid)
+    enrollment = Enrollment.objects.filter(student=student, course=course).first()
+    if not enrollment:
+        enroll = Enrollment(course=course, student=student, enroll_key="Free")
+        enroll_serializer = CourseEnrollSerializer(enroll, data=request.data)
+        if enroll_serializer.is_valid():
+            enroll_serializer.save()
+            return Response(enroll_serializer.data)
+        return Response(enroll_serializer.errors)
+    else:
+        return Response({'message': 'You have already enrolled'}, status=403)
+
+
+

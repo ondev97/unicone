@@ -14,11 +14,14 @@ urlpatterns = [
     path('enrollcourse/<int:pk>/<int:upk>/',views.EnrollCourse,name='enroll_course'),
     path('mycourses/',views.MyCourses,name='mycourses'),
     path('mycoursesteacher/<int:upk>/',views.TeacherCourses,name='mycoursesteacher'),
+    path('enrollcoursebyteacher/<int:pk>/',views.EnrollCourseByTeacher,name='enroll_course_byteacher'),
     path('students/<int:pk>/',views.Students,name='students_in_courses'),
     path('dashboard/', views.DashboardDetails, name='students_count'),
     path('enrolledcoursesinsubject/<int:pk>/',views.MyCoursesInTheSubject,name='enrolled_courses_subject'),
     path('enrollbypayment/<int:pk>/<int:upk>/',views.EnrollCourseByPayment,name='coupon_by_payment'),
     path('enrolledpayment/',views.SavePayments,name='save_payments'),
+    path('unenroll/<int:cid>/<int:sid>/',views.Unenroll,name='unenroll'),
+    path('freenroll/<int:cid>/<int:sid>/',views.FreeEnroll,name='freenroll'),
 
     # Urls for modules
     path('createmodule/<int:pk>/',views.CreateModule,name='create_module'),

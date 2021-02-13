@@ -2,9 +2,12 @@ from django.contrib import auth
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import CreateAPIView,RetrieveUpdateAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+
+from .filters import StudentFilter
 from .serializer import UserSerializerAPI, TeacherProfileSerializer,StudentProfileSerializer
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
@@ -153,6 +156,27 @@ def Allteachers(request):
 #
 #          return Response({"success": "Sent"})
 #          return Response({'success': "Failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def GetStudents(request):
+    students = StudentProfile.objects.all()
+    filterset = StudentFilter(request.GET, queryset=students)
+    if filterset.is_valid():
+        queryset = filterset.qs
+        paginator = PageNumberPagination()
+        paginator.page_size = 10
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = StudentProfileSerializer(result_page, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['user'].pop('password')
+        return paginator.get_paginated_response(serializer.data)
+
+
+
+
+
 
 @api_view(['POST'])
 def ContactForm(request):
