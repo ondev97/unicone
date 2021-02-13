@@ -637,7 +637,7 @@ def TeacherStat(request):
 
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def Unenroll(request, sid, cid):
     student = StudentProfile.objects.get(id=sid)
