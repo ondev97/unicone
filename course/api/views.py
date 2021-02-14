@@ -666,25 +666,29 @@ def EnrollCourseByTeacher(request,pk):
                     res.append({
                         "username" : student.user.username,
                         "email" : student.user.email,
-                        "status" : "enrolled successfully"
+                        "status" : "enrolled successfully",
+                        "success": True
                     })
                 else:
                     res.append({
                         "username": student.user.username,
                         "email": student.user.email,
-                        "status": "something is wrong"
+                        "status": "something is wrong",
+                        "success": False
                     })
             else:
                 res.append({
                     "username": student.user.username,
                     "email": student.user.email,
-                    "status": "already enrolled for this course"
+                    "status": "already enrolled for this course",
+                    "success": False
                 })
         else:
             res.append({
                 "username": username,
                 "email": "",
-                "status": "student not found"
+                "status": "student not found",
+                "success": False
             })
 
     return Response(res, status=200)
