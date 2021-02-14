@@ -22,7 +22,7 @@ urlpatterns = [
     path('stuprofile/<int:pk>/',StudentProfileView,name='view_stuprofile'),
     path('updatestudent/<int:pk>/',UpdateStudentProfileView,name='update_student'),
     path('testlogin/',TestLoginView,name='test_login'),
-    path('getstudents/',GetStudents,name='get_students'),
+    path('getstudents/<int:id>/',GetStudents,name='get_students'),
 
     #password reset views
 

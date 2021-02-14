@@ -654,8 +654,8 @@ def Unenroll(request, sid, cid):
 def EnrollCourseByTeacher(request,pk):
     course = Course.objects.get(id=pk)
     res = []
-    for id in request.data['students']:
-        student = StudentProfile.objects.get(user_id=id)
+    for username in request.data['students']:
+        student = StudentProfile.objects.get(user__username=username)
         e = Enrollment.objects.filter(course=course, student=student).first()
         if not e:
             enroll = Enrollment(course=course, student=student, enroll_key="Enrolled by teacher")
