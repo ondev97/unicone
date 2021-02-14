@@ -655,30 +655,38 @@ def EnrollCourseByTeacher(request,pk):
     course = Course.objects.get(id=pk)
     res = []
     for username in request.data['students']:
-        student = StudentProfile.objects.get(user__username=username)
-        e = Enrollment.objects.filter(course=course, student=student).first()
-        if not e:
-            enroll = Enrollment(course=course, student=student, enroll_key="Enrolled by teacher")
-            serializer = CourseEnrollSerializer(enroll, data= request.data)
-            if serializer.is_valid():
-                serializer.save()
-                res.append({
-                    "username" : student.user.username,
-                    "email" : student.user.email,
-                    "status" : "enrolled successfully"
-                })
+        student = StudentProfile.objects.filter(user__username=username).first()
+        if student:
+            e = Enrollment.objects.filter(course=course, student=student).first()
+            if not e:
+                enroll = Enrollment(course=course, student=student, enroll_key="Enrolled by teacher")
+                serializer = CourseEnrollSerializer(enroll, data= request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    res.append({
+                        "username" : student.user.username,
+                        "email" : student.user.email,
+                        "status" : "enrolled successfully"
+                    })
+                else:
+                    res.append({
+                        "username": student.user.username,
+                        "email": student.user.email,
+                        "status": "something is wrong"
+                    })
             else:
                 res.append({
                     "username": student.user.username,
                     "email": student.user.email,
-                    "status": "something is wrong"
+                    "status": "already enrolled for this course"
                 })
         else:
             res.append({
-                "username": student.user.username,
-                "email": student.user.email,
-                "status": "already enrolled for this course"
+                "username": username,
+                "email": "",
+                "status": "student not found"
             })
+
     return Response(res, status=200)
 
 
