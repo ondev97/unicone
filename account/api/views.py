@@ -166,7 +166,7 @@ def GetStudents(request):
     if filterset.is_valid():
         queryset = filterset.qs
         paginator = PageNumberPagination()
-        paginator.page_size = 10
+        paginator.page_size = 3
         result_page = paginator.paginate_queryset(queryset, request)
         serializer = StudentProfileSerializer(result_page, many=True)
         for i in range(len(serializer.data)):
