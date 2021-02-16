@@ -1,6 +1,10 @@
 from django.db import models
 from account.models import TeacherProfile,StudentProfile
 from django.utils.timezone import now
+from io import BytesIO
+from PIL import Image
+import os
+from django.core.files.base import ContentFile
 from .compress import compress
 
 class Subject(models.Model):
@@ -17,9 +21,18 @@ class Subject(models.Model):
     created_at = models.DateTimeField(default=now)
 
     def save(self, *args, **kwargs):
-        new_image = compress(self.subject_cover)
-        self.subject_cover = new_image
-        super().save(*args, **kwargs)
+        if self.subject_cover:
+            im = Image.open(self.subject_cover)
+            im = im.convert('RGB')
+            # create a BytesIO object
+            im_io = BytesIO()
+            # save image to BytesIO object
+            im.save(im_io, 'JPEG', quality=10)
+
+            temp_name = os.path.split(self.subject_cover.name)[1]
+            self.subject_cover.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
+
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.subject_name
@@ -39,9 +52,18 @@ class Course(models.Model):
     is_enrolled = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        new_image = compress(self.course_cover)
-        self.course_cover = new_image
-        super().save(*args, **kwargs)
+        if self.course_cover:
+            im = Image.open(self.course_cover)
+            im = im.convert('RGB')
+            # create a BytesIO object
+            im_io = BytesIO()
+            # save image to BytesIO object
+            im.save(im_io, 'JPEG', quality=10)
+
+            temp_name = os.path.split(self.course_cover.name)[1]
+            self.course_cover.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
+
+            super().save(*args, **kwargs)
 
 
     def __str__(self):

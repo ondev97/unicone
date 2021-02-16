@@ -8,7 +8,10 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
-from course.compress import compress
+from io import BytesIO
+from PIL import Image
+import os
+from django.core.files.base import ContentFile
 
 
 # Custom User Model
@@ -93,9 +96,18 @@ class TeacherProfile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        new_image = compress(self.profile_pic)
-        self.course_cover = new_image
-        super().save(*args, **kwargs)
+        if self.profile_pic:
+            im = Image.open(self.profile_pic)
+            im = im.convert('RGB')
+            # create a BytesIO object
+            im_io = BytesIO()
+            # save image to BytesIO object
+            im.save(im_io, 'JPEG', quality=10)
+
+            temp_name = os.path.split(self.profile_pic.name)[1]
+            self.profile_pic.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
+
+            super().save(*args, **kwargs)
 
 
 class StudentProfile(models.Model):
@@ -109,9 +121,19 @@ class StudentProfile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        new_image = compress(self.profile_pic)
-        self.course_cover = new_image
-        super().save(*args, **kwargs)
+        if self.profile_pic:
+            im = Image.open(self.profile_pic)
+            im = im.convert('RGB')
+            # create a BytesIO object
+            im_io = BytesIO()
+            # save image to BytesIO object
+            im.save(im_io, 'JPEG', quality=10)
+
+            temp_name = os.path.split(self.profile_pic.name)[1]
+            self.profile_pic.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
+
+            super().save(*args, **kwargs)
+
 
 @receiver(post_save, sender=User)
 def createprofile(sender, instance, created, **kwargs):
