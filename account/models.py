@@ -8,6 +8,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
+from course.compress import compress
 
 
 # Custom User Model
@@ -91,6 +92,11 @@ class TeacherProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, *args, **kwargs):
+        new_image = compress(self.profile_pic)
+        self.course_cover = new_image
+        super().save(*args, **kwargs)
+
 
 class StudentProfile(models.Model):
     def upload_location(instance, filename):
@@ -101,6 +107,11 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save(self, *args, **kwargs):
+        new_image = compress(self.profile_pic)
+        self.course_cover = new_image
+        super().save(*args, **kwargs)
 
 @receiver(post_save, sender=User)
 def createprofile(sender, instance, created, **kwargs):
