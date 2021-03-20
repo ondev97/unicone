@@ -27,7 +27,7 @@ class Subject(models.Model):
             # create a BytesIO object
             im_io = BytesIO()
             # save image to BytesIO object
-            im.save(im_io, 'JPEG', quality=10)
+            im.save(im_io, 'JPEG', quality=30)
 
             temp_name = os.path.split(self.subject_cover.name)[1]
             self.subject_cover.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
@@ -58,7 +58,7 @@ class Course(models.Model):
             # create a BytesIO object
             im_io = BytesIO()
             # save image to BytesIO object
-            im.save(im_io, 'JPEG', quality=10)
+            im.save(im_io, 'JPEG', quality=30)
 
             temp_name = os.path.split(self.course_cover.name)[1]
             self.course_cover.save(temp_name, content=ContentFile(im_io.getvalue()), save=False)
