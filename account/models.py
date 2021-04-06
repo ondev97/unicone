@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import  UserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 # Group Imports
@@ -191,3 +192,17 @@ class GroupAdminForm(forms.ModelForm):
         self.save_m2m()
         return instance
 
+
+
+class StaffManager(UserManager):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(is_staff=False)
+
+
+class StaffProxyModel(User):
+    objects = StaffManager()
+    class Meta:
+        proxy = True
+        verbose_name = 'Student'
+        verbose_name_plural = 'Students'

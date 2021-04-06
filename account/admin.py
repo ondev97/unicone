@@ -1,8 +1,15 @@
 from django.contrib import admin
-from .models import User,TeacherProfile,StudentProfile,GroupAdminForm,Group
+from .models import User, TeacherProfile, StudentProfile, GroupAdminForm, Group, StaffProxyModel
 from django.contrib.auth.admin import UserAdmin
+from rest_framework.authtoken.models import Token
 
 #Register your models here.
+
+class FilterTokenAdmin(admin.ModelAdmin):
+    search_fields = ['user__email','user__username']
+
+
+
 class AccountAdmin(UserAdmin):
     list_display = ('email','username','date_joined','last_login','is_admin')
     search_fields = ('email','username')
@@ -13,9 +20,26 @@ class AccountAdmin(UserAdmin):
     fieldsets = ()
 
 
+class StudentAdmin(admin.ModelAdmin):
+    model = StudentProfile
+    search_fields = ['user__email','user__username']
+
+
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+
+class StaffProxyModelAdmin(UserAdmin):
+    search_fields = ['email', 'username']
+
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+
 admin.site.register(User,AccountAdmin)
 admin.site.register(TeacherProfile)
-admin.site.register(StudentProfile)
+admin.site.register(StudentProfile,StudentAdmin)
+admin.site.register(StaffProxyModel,StaffProxyModelAdmin)
 
 # Unregister the original Group admin.
 admin.site.unregister(Group)
@@ -29,5 +53,6 @@ class GroupAdmin(admin.ModelAdmin):
 
 # Register the new Group ModelAdmin.
 admin.site.register(Group, GroupAdmin)
+admin.site.register(Token,FilterTokenAdmin)
 
 

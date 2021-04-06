@@ -361,17 +361,3 @@ def ContactForm(request):
 
 
 
-
-@api_view(['POST'])
-def ContactForm(request):
-    message = request.data['message']
-    name = request.data['name']
-    subject = request.data['subject']
-    phone_no = request.data['phone_number']
-    email_from = request.data['email']
-
-
-    message = 'From : ' + email_from + '\nName : ' + name + '\nPhone No. : ' + phone_no + '\n\n' + message
-    email_to = ['nkindelpitiya@gmail.com']
-    send_mail(subject, message, settings.EMAIL_HOST_USER, email_to, fail_silently=False)
-    return Response({"message":"Email was sent successfully"}, status=200)
