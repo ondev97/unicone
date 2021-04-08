@@ -38,7 +38,7 @@ class StaffProxyModelAdmin(UserAdmin):
 
 admin.site.register(User,AccountAdmin)
 admin.site.register(TeacherProfile)
-admin.site.register(StudentProfile,StudentAdmin)
+#admin.site.register(StudentProfile,StudentAdmin)
 admin.site.register(StaffProxyModel,StaffProxyModelAdmin)
 
 # Unregister the original Group admin.
