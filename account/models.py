@@ -13,6 +13,7 @@ from io import BytesIO
 from PIL import Image
 import os
 from django.core.files.base import ContentFile
+from django.db.models import Q
 
 
 # Custom User Model
@@ -197,7 +198,7 @@ class GroupAdminForm(forms.ModelForm):
 class StaffManager(UserManager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(is_staff=False)
+        return qs.filter(Q(is_staff=False) and Q(is_teacher=False))
 
 
 class StaffProxyModel(User):
