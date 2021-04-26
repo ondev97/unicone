@@ -354,7 +354,7 @@ def ContactForm(request):
 
 
     message = 'From : ' + email_from + '\nName : ' + name + '\nPhone No. : ' + phone_no + '\n\n' + message
-    email_to = ['nkindelpitiya@gmail.com']
+    email_to = ['']
     send_mail(subject, message, settings.EMAIL_HOST_USER, email_to, fail_silently=False)
     return Response({"message":"Email was sent successfully"}, status=200)
 
