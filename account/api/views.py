@@ -254,7 +254,7 @@ def UpdateStudentProfileView(request,pk):
 
 @api_view(['POST'])
 def TestLoginView(request):
-    user = User.objects.filter(email=request.data['username']).first()
+    user = User.objects.filter(username=request.data['username']).first()
     status = False
     if not user:
         return Response({
