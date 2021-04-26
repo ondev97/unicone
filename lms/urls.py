@@ -20,7 +20,6 @@ from django.conf import settings
 from django.urls import path,include
 
 
-
 admin.site.site_header = "Eyekoneclass Administration"
 admin.site.site_title = "Administration"
 admin.site.index_title = "Welcome to Administration"
@@ -32,4 +31,4 @@ urlpatterns = [
     path('rest-auth/',include('rest_auth.urls'))
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+#urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
