@@ -714,11 +714,10 @@ def FreeEnroll(request,cid,sid):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def CreateZoomModule(request,pk):
     course = Course.objects.get(id=pk)
-    #if course.author.user.id == request.user.id:
-    if True:
+    if course.author.user.id == request.user.id:
         module = Module(course=course)
         if request.method == "POST":
             serializer = ModuleSerializer(module, data=request.data)
@@ -730,13 +729,12 @@ def CreateZoomModule(request,pk):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 @parser_classes([FormParser, MultiPartParser])
 def CreateZoomMeeting(request,pk):
     module = Module.objects.get(id=pk)
     zoom = Zoom(module=module)
-    if True:
-    #if module.course.author.user.id == request.user.id:
+    if module.course.author.user.id == request.user.id:
         serializer = ZoomSerializer(zoom, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -746,7 +744,7 @@ def CreateZoomMeeting(request,pk):
 
 
 @api_view(['POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def UpdateZoomMeeting(request,pk):
     meeting = Zoom.objects.get(id=pk)
     module = Module.objects.get(id=meeting.module.id)
@@ -761,7 +759,7 @@ def UpdateZoomMeeting(request,pk):
 
 
 @api_view(['DELETE'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def DeleteZoomMeeting(request,pk):
     meeting = Zoom.objects.get(id=pk)
     module = Module.objects.get(id=meeting.module.id)
@@ -770,7 +768,7 @@ def DeleteZoomMeeting(request,pk):
     return Response("Meeting Successfully Deleted")
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def GetZoomMeeting(request,pk):
     meeting = Zoom.objects.get(module_id=pk)
     serializer = ZoomSerializer(meeting)
