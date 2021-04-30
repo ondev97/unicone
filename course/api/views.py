@@ -8,7 +8,7 @@ from account.models import User
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Payment
+from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Payment, Zoom
 from account.models import TeacherProfile,StudentProfile
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
@@ -23,7 +23,7 @@ from course.api.serializer import (CourseSerializer,
                                    CouponSerializer,
                                    SubjectSerializer,
                                    SerializerForCourse,
-                                   SubjectViewSerializer, ModuleFileSerializer)
+                                   SubjectViewSerializer, ModuleFileSerializer, ZoomSerializer)
 from rest_framework.generics import( ListAPIView,
                                      RetrieveAPIView,
                                      CreateAPIView,
@@ -713,3 +713,65 @@ def FreeEnroll(request,cid,sid):
 
 
 
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def CreateZoomModule(request,pk):
+    course = Course.objects.get(id=pk)
+    #if course.author.user.id == request.user.id:
+    if True:
+        module = Module(course=course)
+        if request.method == "POST":
+            serializer = ModuleSerializer(module, data=request.data)
+            if serializer.is_valid():
+                serializer.save(is_meeting=True)
+                return Response(serializer.data)
+            return Response(serializer.errors,status=500)
+    return Response({"message":"you're not authorized"},status=403)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+@parser_classes([FormParser, MultiPartParser])
+def CreateZoomMeeting(request,pk):
+    module = Module.objects.get(id=pk)
+    zoom = Zoom(module=module)
+    if True:
+    #if module.course.author.user.id == request.user.id:
+        serializer = ZoomSerializer(zoom, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response({"message":"Zoom meeting was not created"})
+    return Response({"message":"you're not authorized"},status=403)
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def UpdateZoomMeeting(request,pk):
+    meeting = Zoom.objects.get(id=pk)
+    module = Module.objects.get(id=meeting.module.id)
+    serializer = ZoomSerializer(instance=meeting, data=request.data)
+    module_serializer = ModuleSerializer(instance=module, data=request.data)
+    if module_serializer.is_valid():
+        module_serializer.save(is_meeting=True)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+
+@api_view(['DELETE'])
+#@permission_classes([IsAuthenticated])
+def DeleteZoomMeeting(request,pk):
+    meeting = Zoom.objects.get(id=pk)
+    module = Module.objects.get(id=meeting.module.id)
+    meeting.delete()
+    module.delete()
+    return Response("Meeting Successfully Deleted")
+
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def GetZoomMeeting(request,pk):
+    meeting = Zoom.objects.get(module_id=pk)
+    serializer = ZoomSerializer(meeting)
+    return Response(serializer.data)

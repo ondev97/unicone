@@ -50,6 +50,7 @@ class Course(models.Model):
     price = models.IntegerField(default=0,null=True,blank=True)
     duration = models.CharField(max_length=20, null=True, blank=True)
     is_enrolled = models.BooleanField(default=False)
+    is_freeze = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.course_cover:
@@ -78,7 +79,7 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True,related_name='modules')
     module_name = models.CharField(max_length=100)
     module_content = models.TextField(null=True,blank=True)
-    # file = models.FileField(null=True,upload_to=upload_location)
+    is_meeting = models.BooleanField(default=False)
 
     def __str__(self):
         return self.module_name+ ""+" "+ self.course.course_name
@@ -123,3 +124,15 @@ class Payment(models.Model):
 
     def __str__(self):
         return str(self.amount)
+
+
+class Zoom(models.Model):
+    module = models.ForeignKey(Module,on_delete=models.CASCADE,null=True,blank=True)
+    meeting_name = models.CharField(max_length=600,null=True,blank=True)
+    email = models.EmailField()
+    meeting_id = models.CharField(max_length=600,blank=True,null=True)
+    passcode = models.CharField(max_length=600,blank=True,null=True)
+    date = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return str(self.meeting_name)

@@ -60,4 +60,13 @@ urlpatterns = [
     path('teachercount/',views.teachercount,name='teacher_count'),
     path('stat/', views.Statistics, name='stat'),
     path('teacherstat/', views.TeacherStat, name='stat_teacher'),
+
+    # urls for Zoom
+
+    path('createzoom/<int:pk>/', views.CreateZoomMeeting, name='zoom_meeting'),
+    path('createzoommodule/<int:pk>/', views.CreateZoomModule, name='zoom_module'),
+    path('updatezoom/<int:pk>/', views.UpdateZoomMeeting, name='update_zoom'),
+    path('deletezoom/<int:pk>/', views.DeleteZoomMeeting, name='zoom_module'),
+    path('viewzoom/<int:pk>/', views.GetZoomMeeting, name='view_zoom'),
 ]
+

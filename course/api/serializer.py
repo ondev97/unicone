@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile
+from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Zoom
 from account.models import TeacherProfile
 
 
@@ -83,7 +83,7 @@ class CourseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['course_name','id','course_description','created_at','course_cover','subject','price','duration']
+        fields = ['course_name','id','course_description','created_at','course_cover','subject','price','duration','is_freeze']
         depth = 3
 
     # def create(self, validated_data):
@@ -131,4 +131,8 @@ class SubjectViewSerializer(serializers.ModelSerializer):
 
         depth = 2
 
+class ZoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Zoom
+        fields = "__all__"
 
