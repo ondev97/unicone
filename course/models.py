@@ -132,7 +132,7 @@ class Zoom(models.Model):
     email = models.EmailField()
     meeting_id = models.CharField(max_length=600,blank=True,null=True)
     passcode = models.CharField(max_length=600,blank=True,null=True)
-    date = models.DateTimeField(default=now)
+    date = models.CharField(max_length=300,null=True,blank=True)
 
     def __str__(self):
         return str(self.meeting_name)
