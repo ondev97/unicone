@@ -730,7 +730,6 @@ def CreateZoomModule(request,pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-@parser_classes([FormParser, MultiPartParser])
 def CreateZoomMeeting(request,pk):
     module = Module.objects.get(id=pk)
     zoom = Zoom(module=module)
