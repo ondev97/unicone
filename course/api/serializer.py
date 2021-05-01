@@ -136,3 +136,5 @@ class ZoomSerializer(serializers.ModelSerializer):
         model = Zoom
         fields = "__all__"
 
+        depth = 1
+
