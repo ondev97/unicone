@@ -12,7 +12,7 @@ from account.models import TeacherProfile
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['id','course_cover','course_description','course_name']
+        fields = ['id','course_cover','course_description','course_name','is_freeze']
 
 
 # More info about courses
