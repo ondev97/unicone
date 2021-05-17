@@ -597,7 +597,7 @@ def Statistics(request):
 
 
 @api_view(['GET'])
-@cache_page(60*60)
+@cache_page(60*10)
 def LatestSubjects(request):
     subjects = Subject.objects.order_by("-id")[:3]
     serializer = SubjectSerializer(subjects,many=True)
