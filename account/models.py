@@ -151,9 +151,9 @@ def saveprofile(sender, instance, **kwargs):
     print('Saved')
     if instance.is_teacher and not instance.is_superuser:
         instance.teacherprofile.save()
-    elif not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
-        print("status",instance.is_superuser)
-        StudentProfile.objects.get_or_create(user=instance)
+    # elif not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
+    #     print("status",instance.is_superuser)
+    #     StudentProfile.objects.get_or_create(user=instance)
 
 
 
