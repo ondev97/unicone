@@ -142,9 +142,9 @@ def createprofile(sender, instance, created, **kwargs):
     print("///////", created)
     if instance.is_teacher and not instance.is_superuser:
         TeacherProfile.objects.get_or_create(user=instance)
-    elif not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
-        StudentProfile.objects.get_or_create(user=instance)
-
+    else:
+        if not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
+            StudentProfile.objects.get_or_create(user=instance)
 
 @receiver(post_save, sender=User)
 def saveprofile(sender, instance, **kwargs):
