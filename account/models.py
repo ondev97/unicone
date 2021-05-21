@@ -198,7 +198,7 @@ class GroupAdminForm(forms.ModelForm):
 class StaffManager(UserManager):
     def get_queryset(self):
         qs = super().get_queryset()
-        a =  qs.filter(Q(is_teacher=False) and Q(is_staff=True))
+        a = qs.filter(Q(is_teacher=False) and Q(is_superuser=False))
         return a
 
 
