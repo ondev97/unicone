@@ -139,26 +139,21 @@ class StudentProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def createprofile(sender, instance, created, **kwargs):
-    print("///////", created,instance)
+    print("///////", created)
     if instance.is_teacher and not instance.is_superuser:
-        print("1st if running... Create Teacher")
         TeacherProfile.objects.get_or_create(user=instance)
-    else:
-        if not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
-            print("second if running")
-            StudentProfile.objects.get_or_create(user=instance)
+    elif not instance.is_superuser:
+        StudentProfile.objects.get_or_create(user=instance)
+
 
 @receiver(post_save, sender=User)
 def saveprofile(sender, instance, **kwargs):
-    print('Saved',instance.is_teacher)
+    print('Saved')
     if instance.is_teacher and not instance.is_superuser:
-        print("3rd if running")
         instance.teacherprofile.save()
-    else:
-        if not instance.is_superuser and not instance.is_teacher and not instance.is_admin:
-            print("4th if running")
-            print("status",instance.is_superuser)
-            StudentProfile.objects.get_or_create(user=instance)
+    elif not instance.is_superuser:
+        print("status",instance.is_superuser)
+        StudentProfile.objects.get_or_create(user=instance)
 
 
 
@@ -203,7 +198,7 @@ class GroupAdminForm(forms.ModelForm):
 class StaffManager(UserManager):
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(Q(is_staff=False) and Q(is_teacher=False) and Q(is_superuser=False))
+        return qs.filter(Q(is_staff=False) and Q(is_teacher=False))
 
 
 class StaffProxyModel(User):
