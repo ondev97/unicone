@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Zoom
+from course.models import Course, Module, Enrollment, Coupon, Subject, ModuleFile, Zoom, CKEditor5
 from account.models import TeacherProfile
 
 
@@ -138,3 +138,7 @@ class ZoomSerializer(serializers.ModelSerializer):
 
         depth = 1
 
+class CKEditor5Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = CKEditor5
+        fields = "__all__"

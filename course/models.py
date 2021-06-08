@@ -136,3 +136,10 @@ class Zoom(models.Model):
 
     def __str__(self):
         return str(self.meeting_name)
+
+
+class CKEditor5(models.Model):
+    def upload_location(instance, filename):
+        return "ckeditor_images/%s" % (filename)
+
+    upload = models.ImageField(null=True, blank=True, upload_to=upload_location)
