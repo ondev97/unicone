@@ -1,6 +1,6 @@
 from .base import *
 
-ALLOWED_HOSTS = ['128.199.145.231']
+ALLOWED_HOSTS = ['128.199.145.231','api.uniconeclass.com']
 
 DATABASES = {
     'default': {
