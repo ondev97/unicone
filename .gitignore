@@ -119,3 +119,4 @@ media/
 /account/migrations/
 /course/migrations/
 /static/
+.idea

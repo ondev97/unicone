@@ -95,12 +95,12 @@ AUTH_USER_MODEL = 'account.User'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
@@ -148,12 +148,6 @@ REST_AUTH_SERIALIZERS = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
-
-MEDIA_ROOT = os.path.join(BASE_DIR,'static/images/')
 
 
 #smtp configuration
